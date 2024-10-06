@@ -17,7 +17,7 @@ import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Product from "./components/Product";
 import Sell from "./components/Sell";
-import About from "./components/About";
+
 
 const router = createBrowserRouter([
   {
@@ -28,10 +28,7 @@ const router = createBrowserRouter([
     path: "/sell",
     element: <Sell />,
   },
-  {
-    path: "/about",
-    element: <About/>,
-  },
+  
   {
     path: "/login",
     element: <Login />,

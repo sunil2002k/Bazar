@@ -4,15 +4,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
-const path = require('path')
+const path = require('path');
 app.use(cors());
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/ecom", {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  })
+  .connect("mongodb://127.0.0.1:27017/ecom")
   .then(() => {
     console.log("Connection with MongoDB is successful");
   })

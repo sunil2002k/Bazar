@@ -6,14 +6,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  
+  const [searchTerm, setSearchTerm] = useState(""); // State to manage search term
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
 
   const navigate = useNavigate();
-
   const username = localStorage.getItem("username"); // Check if the user is logged in
 
   const handleLogout = () => {
@@ -23,6 +22,12 @@ const Navbar = () => {
 
   const handleHome = () => {
     navigate("/");
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("Search term:", searchTerm);
+    // Add search logic here (e.g., navigate to search results page)
   };
 
   return (
@@ -38,10 +43,24 @@ const Navbar = () => {
               alt="Logo"
             />
             <span className="text-xl text-red tracking-tight">Olx</span>
+
+            {/* Search Field - Shifted left */}
+            <form onSubmit={handleSearch} className="ml-6"> {/* Add margin-left */}
+              <input
+                type="text"
+                className="px-4 py-2 border rounded-md"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button type="submit" className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md">
+                Search
+              </button>
+            </form>
           </div>
 
-          {/* Desktop Menu */}
-          <ul className="sm:hidden lg:flex ml-14 space-x-12">
+          {/* Desktop Menu - Shifted left */}
+          <ul className="sm:hidden lg:flex ml-10 space-x-12"> {/* Add margin-left */}
             {navItems.map((item, index) => (
               <li key={index}>
                 <a href={item.href}>{item.label}</a>
