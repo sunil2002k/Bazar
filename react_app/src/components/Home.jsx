@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import {useLocation, useNavigate} from 'react-router-dom';
 
-function Home (){
-    const navigate =useNavigate()
+function Home (props){
+    const navigate = useNavigate()
    const [products, setProducts] = useState([]);
+   
     // useEffect(()=>{
     //     if (!localStorage.getItem('token')){
     //         navigate('/login')

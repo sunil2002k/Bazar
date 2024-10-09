@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 import { navItems } from "../constants";
 import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = (props) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // State to manage search term
 
@@ -44,23 +44,30 @@ const Navbar = () => {
             />
             <span className="text-xl text-red tracking-tight">Olx</span>
 
-            {/* Search Field - Shifted left */}
-            <form onSubmit={handleSearch} className="ml-6"> {/* Add margin-left */}
+            {/* Search Field  */}
+            <form onSubmit={handleSearch} className="ml-6">
               <input
                 type="text"
                 className="px-4 py-2 border rounded-md"
                 placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={props && props.search}
+                onChange={(e) =>
+                  props.setSearchTerm && props.setSearchTerm(e.target.value)
+                }
               />
-              <button type="submit" className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md">
+              <button
+                type="submit"
+                className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md"
+              >
                 Search
               </button>
             </form>
           </div>
 
-          {/* Desktop Menu - Shifted left */}
-          <ul className="sm:hidden lg:flex ml-10 space-x-12"> {/* Add margin-left */}
+          {/* Desktop Menu */}
+          <ul className="sm:hidden lg:flex ml-10 space-x-12">
+            {" "}
+            {/* Add margin-left */}
             {navItems.map((item, index) => (
               <li key={index}>
                 <a href={item.href}>{item.label}</a>
