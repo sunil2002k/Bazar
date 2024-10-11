@@ -21,7 +21,7 @@ const Login = () => {
       if (response.data.msg === 'Login successful') {
         // Redirect to the home page after successful login
         localStorage.setItem('username', response.data.username);
-        navigate('/home');
+        navigate('/');
       } else {
         setError(response.data.msg);  // If any error message from server
       }

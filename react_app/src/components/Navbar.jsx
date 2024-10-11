@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = (props) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // State to manage search term
+
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
@@ -24,11 +24,11 @@ const Navbar = (props) => {
     navigate("/");
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Search term:", searchTerm);
-    // Add search logic here (e.g., navigate to search results page)
-  };
+  // const handleSearch = (e) => {
+  //   e.preventDefault();
+  //   console.log("Search term:", searchTerm);
+  //   // Add search logic here (e.g., navigate to search results page)
+  // };
 
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80">
@@ -45,23 +45,24 @@ const Navbar = (props) => {
             <span className="text-xl text-red tracking-tight">Olx</span>
 
             {/* Search Field  */}
-            <form onSubmit={handleSearch} className="ml-6">
+            
               <input
                 type="text"
-                className="px-4 py-2 border rounded-md"
+                className=" ml-6 px-4 py-2 border-0 rounded-md"
+                // onSubmit={handleSearch}
                 placeholder="Search..."
                 value={props && props.search}
                 onChange={(e) =>
-                  props.setSearchTerm && props.setSearchTerm(e.target.value)
+                  props.handleSearch && props.handleSearch(e.target.value)
                 }
               />
               <button
                 type="submit"
                 className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md"
+                onClick={()=>props.handleClick && props.handleClick() }
               >
                 Search
               </button>
-            </form>
           </div>
 
           {/* Desktop Menu */}

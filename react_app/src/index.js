@@ -15,15 +15,12 @@ import {
 import Home from "./components/Home";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import Product from "./components/Product";
 import Sell from "./components/Sell";
+import Productcat from "./components/Productcat";
 
 
 const router = createBrowserRouter([
-  {
-    path: "/home",
-    element: <Home />,
-  },
+  
   {
     path: "/sell",
     element: <Sell />,
@@ -38,8 +35,8 @@ const router = createBrowserRouter([
     element: <SignUp />,
   },
   {
-    path: "/products",
-    element: <Product />,
+    path: "/categories",
+    element: <Productcat />,
   },
   {
     path: "/",

@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from './Navbar'
 
-const Product = () => {
+const Productcat = () => {
   return (
     <>
     <Navbar/>
@@ -10,4 +10,4 @@ const Product = () => {
   )
 }
 
-export default Product
+export default Productcat

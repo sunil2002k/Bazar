@@ -51,7 +51,7 @@ const Sell = () => {
   
     axios.post("http://localhost:8000/sell", data)
       .then((res) => {
-        console.log("Success:", res);
+        console.log("Success:", res.data);
       })
       .catch((err) => {
         console.error("Error:", err);
