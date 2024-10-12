@@ -1,5 +1,5 @@
 export const navItems = [
     // { label: "Home", href: "/" },
-    { label: "Categories", href: "/categories" },
+    // { label: "Categories", href: "/categories" },
 
   ];

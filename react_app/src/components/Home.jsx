@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import Productcat from "./Productcat";
 import axios from "axios";
 // import {useLocation, useNavigate} from 'react-router-dom';
 
@@ -47,40 +48,41 @@ function Home(props) {
         handleSearch={handleSearch}
         handleClick={handleClick}
       />
+      <Productcat />
       <div className="homepage">
-        {/* <h1>Welcome to the home</h1> */}
-        {products && products.length > 0 ? (
-          products.map((item, index) => {
-            console.log("Rendering product:", item); // Debugging to ensure products are being rendered
+  {products && products.length > 0 ? (
+    <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+      {products.map((item, index) => {
+        return (
+          <div key={item._id || index} className="product-item  rounded-lg flex flex-col p-4">
+            {item.images && item.images.length > 0 ? (
+              item.images.map((image, idx) => (
+                <div key={idx} className="product-image aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
+                  <img
+                    src={`http://localhost:8000/${image}`}
+                    alt="Product Image"
+                    className="h-full w-full object-cover object-center"
+                  />
+                </div>
+              ))
+            ) : (
+              <p>No images available</p>
+            )}
+            <div className="mt-4 flex flex-col items-start">
+              <p className="text-lg font-semibold">{item.title}</p>
+              <p className="text-sm pr-1">{item.category}</p>
+              <p className="mt-2 text-sm text-gray-700">{item.description}</p>
+              <h3 className="mt-4 text-xl font-bold text-green-600">Rs. {item.price}</h3>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    <p>No products available</p>
+  )}
+</div>
 
-            return (
-              <div key={item._id || index} className="card m-3">
-                {" "}
-                {/* Use index as fallback key */}
-                {item.images && item.images.length > 0 ? (
-                  item.images.map((image, idx) => (
-                    <img
-                      key={idx}
-                      src={`http://localhost:8000/${image}`}
-                      alt="Product Image"
-                      className="w-40 h-40"
-                    />
-                  ))
-                ) : (
-                  <p>No images available</p>
-                )}
-                <p className="p-2 gap-7 ">
-                  {item.title} | {item.category}
-                </p>
-                <p className="p-2">{item.description}</p>
-                <h3 className="p-2">Rs. {item.price}</h3>
-              </div>
-            );
-          })
-        ) : (
-          <p>No products available</p>
-        )}
-      </div>
     </>
   );
 }

@@ -42,14 +42,13 @@ const Navbar = (props) => {
               src={logo}
               alt="Logo"
             />
-            <span className="text-xl text-red tracking-tight">Olx</span>
+            <span className="text-xl text-red tracking-tight">Bazar</span>
 
             {/* Search Field  */}
             
               <input
                 type="text"
-                className=" ml-6 px-4 py-2 border-0 rounded-md"
-                // onSubmit={handleSearch}
+                className=" ml-6 px-4 py-2 border rounded-md"
                 placeholder="Search..."
                 value={props && props.search}
                 onChange={(e) =>
