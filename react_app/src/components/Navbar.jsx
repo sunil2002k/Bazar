@@ -24,12 +24,7 @@ const Navbar = (props) => {
     navigate("/");
   };
 
-  // const handleSearch = (e) => {
-  //   e.preventDefault();
-  //   console.log("Search term:", searchTerm);
-  //   // Add search logic here (e.g., navigate to search results page)
-  // };
-
+  
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80">
       <div className="container px-4 mx-auto relative lg:text-sm">
@@ -67,7 +62,6 @@ const Navbar = (props) => {
           {/* Desktop Menu */}
           <ul className="sm:hidden lg:flex ml-10 space-x-12">
             {" "}
-            {/* Add margin-left */}
             {navItems.map((item, index) => (
               <li key={index}>
                 <a href={item.href}>{item.label}</a>

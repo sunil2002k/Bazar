@@ -44,10 +44,7 @@ const Sell = () => {
       data.append('images', image);
     });
   
-    // Log FormData for debugging
-    for (let pair of data.entries()) {
-      console.log(`${pair[0]}:`, pair[1]);
-    }
+ 
   
     axios.post("http://localhost:8000/sell", data)
       .then((res) => {

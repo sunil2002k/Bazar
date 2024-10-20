@@ -7,6 +7,8 @@ const multer = require("multer");
 const path = require('path');
 app.use(cors());
 app.use(express.json());
+const { ObjectId } = require('mongodb');
+
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/ecom")
@@ -32,7 +34,28 @@ const signupSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  liked_products:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Sellingproduct'}]
 });
+// likedproduct
+app.post('/like_product',(req,res)=>{
+  let productId = req.body.productId;
+  let userId = req.body.userId;
+  console.log(req.body);
+  
+
+  SignupUser.updateOne({ _id: new ObjectId(userId)} , { $addToSet : {liked_products : productId}})
+  .then((result) => {
+    if (result.modifiedCount === 0) {
+      throw new Error('No document matched');
+    }
+    res.json({ message: 'Like success' });
+  })
+  .catch((err) => {
+    console.error('Database error:', err);
+    res.status(500).json({ message: 'Server error occurred', error: err.message });
+  });
+})
+
 
 const SignupUser = mongoose.model("signupData", signupSchema);
 
@@ -72,7 +95,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Return success response (you can also add JWT for session management)
-    res.json({ msg: "Login successful", username: user.username });
+    res.json({ msg: "Login successful", username: user.username, userId: user._id });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server error");
@@ -106,6 +129,7 @@ const sellprodSchema = new mongoose.Schema({
 });
 const Sellingproduct = mongoose.model("Sellingproduct", sellprodSchema);
 const fs = require('fs');
+const { type } = require("os");
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);

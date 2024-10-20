@@ -22,8 +22,6 @@ const SignUp = () => {
 
     try {
       await axios.post("http://localhost:8000/signup", signData);
-
-      console.log("Data posted successfully");
       alert("successfully submitted");
 
       setSignData({
@@ -32,7 +30,6 @@ const SignUp = () => {
         password: "",
       });
     } catch (error) {
-      console.error("Error submitting form:", error.message);
       alert("error");
     }
   };
