@@ -17,6 +17,8 @@ import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Sell from "./components/Sell";
 import Productcat from "./components/Productcat";
+import Likedproduct from "./components/Likedproduct";
+import ProductDetail from "./components/ProductDetail";
 
 
 const router = createBrowserRouter([
@@ -25,7 +27,14 @@ const router = createBrowserRouter([
     path: "/sell",
     element: <Sell />,
   },
-  
+  {
+    path: "/product/:productId",
+    element: <ProductDetail/>,
+  },
+  {
+    path: "/liked_products",
+    element: <Likedproduct />,
+  },
   {
     path: "/login",
     element: <Login />,

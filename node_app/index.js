@@ -36,7 +36,7 @@ const signupSchema = new mongoose.Schema({
   },
   liked_products:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Sellingproduct'}]
 });
-// likedproduct
+// likeproduct
 app.post('/like_product',(req,res)=>{
   let productId = req.body.productId;
   let userId = req.body.userId;
@@ -51,11 +51,19 @@ app.post('/like_product',(req,res)=>{
     res.json({ message: 'Like success' });
   })
   .catch((err) => {
-    console.error('Database error:', err);
     res.status(500).json({ message: 'Server error occurred', error: err.message });
   });
 })
 
+app.post('/liked_product', (req, res) => {
+  SignupUser.findOne().populate('liked_products')
+    .then((result) => {
+      res.send({ message: 'success', products: result.liked_products });
+    })
+    .catch(() => {
+      res.send({ message: 'server error' });
+    });
+});
 
 const SignupUser = mongoose.model("signupData", signupSchema);
 
@@ -180,6 +188,19 @@ app.get('/sell', (req, res) => {
     .then((result) => {
       console.log("Products fetched:", result); 
       res.send({ message: 'success', products: result });
+    })
+    .catch((err) => {
+      console.error(err); 
+      res.send({ message: 'server error' });
+    });
+});
+
+app.get('/sell/:pId', (req, res) => {
+  console.log(req.params)
+  Sellingproduct.findOne({_id: req.params.pId})
+    .then((result) => {
+      console.log("Product fetched:", result); 
+      res.send({ message: 'success', product: result });
     })
     .catch((err) => {
       console.error(err); 

@@ -3,22 +3,20 @@ import Navbar from "./Navbar";
 import Productcat from "./Productcat";
 import axios from "axios";
 import { FaHeart } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; 
 
-function Home(props) {
+function Likedproduct(props) {
   const [products, setProducts] = useState([]);
   const [catproducts, setcatProducts] = useState([]);
   const [search, setSearch] = useState("");
 
-  const navigate = useNavigate(); 
-
   useEffect(() => {
-    const url = "http://localhost:8000/sell";
+    const url = "http://localhost:8000/liked_product";
+    let data = {userId: localStorage.getItem('userId')}
     axios
-      .get(url)
+      .post(url,data)
       .then((res) => {
         if (res.data.products) {
-          setProducts(res.data.products); 
+          setProducts(res.data.products); // Set all the products in the state
         }
       })
       .catch((err) => {
@@ -47,24 +45,19 @@ function Home(props) {
     );
     setcatProducts(filteredProducts);
   };
-
-  const handleLike = async (productId) => {
-    let userId = localStorage.getItem("userId");
+  const  handleLike = async (productId)=>{
+    let userId = localStorage.getItem('userId')
     const url = "http://localhost:8000/like_product";
-    const data = { userId, productId };
-    await axios
-      .post(url, data)
+    const data ={userId, productId}
+   await axios
+      .post(url,data)
       .then((res) => {
-        console.log(res);
+       console.log(res)
       })
       .catch((err) => {
         alert("Server error occurred");
       });
-  };
-
-  const handleProduct = (_id) => {
-    navigate(`/product/${_id}`);
-  };
+  }
 
   return (
     <>
@@ -78,7 +71,6 @@ function Home(props) {
               <div
                 key={item._id || index}
                 className="product-item rounded-lg flex flex-col p-4"
-                onClick={() => handleProduct(item._id)}
               >
                 {item.images && item.images.length > 0 ? (
                   item.images.map((image, idx) => (
@@ -86,9 +78,10 @@ function Home(props) {
                       key={idx}
                       className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg"
                     >
+                      {/* FaHeart Icon positioned to the top right corner */}
                       <FaHeart
                         className="absolute top-2 right-2 text-gray-400 text-xl cursor-pointer hover:text-red-500 transition-colors duration-200"
-                        onClick={() => handleLike(item._id)}
+                        onClick={()=>handleLike(item._id)}
                       />
                       <img
                         src={`http://localhost:8000/${image}`}
@@ -104,7 +97,9 @@ function Home(props) {
                   <p className="text-lg font-semibold">{item.title}</p>
                   <p className="text-sm pr-1">{item.category}</p>
                   <p className="mt-2 text-sm text-gray-700">{item.description}</p>
-                  <h3 className="mt-4 text-xl font-bold text-green-600">Rs. {item.price}</h3>
+                  <h3 className="mt-4 text-xl font-bold text-green-600">
+                    Rs. {item.price}
+                  </h3>
                 </div>
               </div>
             ))}
@@ -120,7 +115,6 @@ function Home(props) {
               <div
                 key={item._id || index}
                 className="product-item rounded-lg flex flex-col p-4"
-                onClick={() => handleProduct(item._id)}
               >
                 {item.images && item.images.length > 0 ? (
                   item.images.map((image, idx) => (
@@ -128,9 +122,9 @@ function Home(props) {
                       key={idx}
                       className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg"
                     >
-                      <FaHeart
+                       <FaHeart
                         className="absolute top-2 right-2 text-gray-400 text-xl cursor-pointer hover:text-red-500 transition-colors duration-200"
-                        onClick={() => handleLike(item._id)}
+                        onClick={()=>handleLike(item._id)}
                       />
                       <img
                         src={`http://localhost:8000/${image}`}
@@ -146,7 +140,9 @@ function Home(props) {
                   <p className="text-lg font-semibold">{item.title}</p>
                   <p className="text-sm pr-1">{item.category}</p>
                   <p className="mt-2 text-sm text-gray-700">{item.description}</p>
-                  <h3 className="mt-4 text-xl font-bold text-green-600">Rs. {item.price}</h3>
+                  <h3 className="mt-4 text-xl font-bold text-green-600">
+                    Rs. {item.price}
+                  </h3>
                 </div>
               </div>
             ))}
@@ -159,4 +155,4 @@ function Home(props) {
   );
 }
 
-export default Home;
+export default Likedproduct;

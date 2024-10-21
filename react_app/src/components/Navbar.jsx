@@ -3,10 +3,10 @@ import { useState } from "react";
 import logo from "../assets/logo.png";
 import { navItems } from "../constants";
 import { Link, useNavigate } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 const Navbar = (props) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
@@ -24,7 +24,6 @@ const Navbar = (props) => {
     navigate("/");
   };
 
-  
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80">
       <div className="container px-4 mx-auto relative lg:text-sm">
@@ -40,24 +39,26 @@ const Navbar = (props) => {
             <span className="text-xl text-red tracking-tight">Bazar</span>
 
             {/* Search Field  */}
-            
-              <input
-                type="text"
-                className=" ml-6 px-4 py-2 border rounded-md"
-                placeholder="Search..."
-                value={props && props.search}
-                onChange={(e) =>
-                  props.handleSearch && props.handleSearch(e.target.value)
-                }
-              />
-              <button
-                type="submit"
-                className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md"
-                onClick={()=>props.handleClick && props.handleClick() }
-              >
-                Search
-              </button>
-          </div>
+
+            <div className="relative flex items-center max-w-sm w-full lg:mx-auto">
+          <input
+            type="text"
+            className="w-full ml-10 py-2 px-4 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Search..."
+            value={props && props.search}
+            onChange={(e) =>
+              props.handleSearch && props.handleSearch(e.target.value)
+            }
+          />
+          <button
+            type="submit"
+            className="px-4 py-2 flex items-center justify-center text-gray-700 bg-gray-100 border border-gray-300 rounded-r-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            onClick={() => props.handleClick && props.handleClick()}
+          >
+            <FaSearch className="h-5 w-5" />
+          </button>
+        </div>
+        </div>
 
           {/* Desktop Menu */}
           <ul className="sm:hidden lg:flex ml-10 space-x-12">
@@ -79,6 +80,12 @@ const Navbar = (props) => {
                   className="bg-blue-500 py-2 px-3 rounded-md text-white"
                 >
                   Sell
+                </Link>
+                <Link
+                  to="/liked_products"
+                  className="bg-blue-500 py-2 px-3 rounded-md text-white"
+                >
+                  Liked items
                 </Link>
                 <button
                   onClick={handleLogout}
