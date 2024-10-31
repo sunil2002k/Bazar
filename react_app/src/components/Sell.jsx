@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import axios from "axios";
-
+import Categories from "./CategoriesList";
 const Sell = () => {
   const [formData, setFormData] = useState({
     title: "",
@@ -11,6 +11,8 @@ const Sell = () => {
     
     images: [], // Handle images as an array of files
   });
+  const [search, setSearch] = useState("");
+  const [issearch, setisSearch] = useState(false);
 
   const [fileNames, setFileNames] = useState([]); // State to store the file names
 
@@ -20,6 +22,10 @@ const Sell = () => {
       ...formData,
       [name]: value,
     });
+  };
+  const resetSearch = () => {
+    setSearch("");
+    setisSearch(false);
   };
 
   const handleFileChange = (e) => {
@@ -39,6 +45,7 @@ const Sell = () => {
     data.append("description", formData.description);
     data.append("price", formData.price);
     data.append("category", formData.category);
+    data.append("userId", localStorage.getItem('userId'))
     
     formData.images.forEach((image) => {
       data.append('images', image);
@@ -58,7 +65,7 @@ const Sell = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar search={search}  resetSearch={resetSearch} />
       <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
         <h2 className="text-2xl font-bold mb-6 block text-gray-700 text-center">
           Sell Your Product
@@ -128,6 +135,13 @@ const Sell = () => {
               <option value="bikes">Bikes</option>
               <option value="mobile">Mobile</option>
               <option value="clothes">Clothes</option>
+              {
+                Categories && Categories.length>0 && Categories.map((item,index)=>{
+                  return(
+                    <option key={'option' + index}>{item}</option>
+                  )
+                })
+              }
             </select>
           </div>
 
@@ -154,6 +168,7 @@ const Sell = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            
           >
             Submit
           </button>

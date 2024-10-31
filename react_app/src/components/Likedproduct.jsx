@@ -4,11 +4,11 @@ import Productcat from "./Productcat";
 import axios from "axios";
 import { FaHeart } from "react-icons/fa";
 
-function Likedproduct(props) {
+function Likedproduct(props ) {
   const [products, setProducts] = useState([]);
   const [catproducts, setcatProducts] = useState([]);
   const [search, setSearch] = useState("");
-
+  const [issearch, setisSearch] = useState(false);
   useEffect(() => {
     const url = "http://localhost:8000/liked_product";
     let data = {userId: localStorage.getItem('userId')}
@@ -27,7 +27,10 @@ function Likedproduct(props) {
   const handleSearch = (value) => {
     setSearch(value);
   };
-
+  const resetSearch = () => {
+    setSearch("");
+    setisSearch(false);
+  };
   const handleClick = () => {
     const filteredProducts = products.filter((item) => {
       return (
@@ -61,7 +64,7 @@ function Likedproduct(props) {
 
   return (
     <>
-      <Navbar search={search} handleSearch={handleSearch} handleClick={handleClick} />
+      <Navbar search={search} handleSearch={handleSearch} handleClick={handleClick}  resetSearch={resetSearch} />
       <Productcat handleCategory={handleCategory} />
 
       <div className="homepage">

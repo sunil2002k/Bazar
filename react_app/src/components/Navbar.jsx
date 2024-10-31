@@ -1,11 +1,10 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import logo from "../assets/logo.png";
-import { navItems } from "../constants";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 
-const Navbar = (props) => {
+const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const toggleNavbar = () => {
@@ -22,6 +21,7 @@ const Navbar = (props) => {
 
   const handleHome = () => {
     navigate("/");
+    resetSearch();
   };
 
   return (
@@ -45,30 +45,21 @@ const Navbar = (props) => {
             type="text"
             className="w-full ml-10 py-2 px-4 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search..."
-            value={props && props.search}
-            onChange={(e) =>
-              props.handleSearch && props.handleSearch(e.target.value)
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)
             }
           />
           <button
             type="submit"
             className="px-4 py-2 flex items-center justify-center text-gray-700 bg-gray-100 border border-gray-300 rounded-r-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            onClick={() => props.handleClick && props.handleClick()}
+            onClick={() => handleClick()}
           >
             <FaSearch className="h-5 w-5" />
           </button>
         </div>
         </div>
 
-          {/* Desktop Menu */}
-          <ul className="sm:hidden lg:flex ml-10 space-x-12">
-            {" "}
-            {navItems.map((item, index) => (
-              <li key={index}>
-                <a href={item.href}>{item.label}</a>
-              </li>
-            ))}
-          </ul>
+          
 
           {/* Desktop User Actions */}
           <div className="sm:hidden lg:flex justify-center space-x-12 items-center">
@@ -115,13 +106,7 @@ const Navbar = (props) => {
         {/* Mobile Drawer */}
         {mobileDrawerOpen && (
           <div className="fixed right-0 z-20 bg-neutral-900 w-full p-12 flex flex-col justify-center items-center lg:hidden">
-            <ul>
-              {navItems.map((item, index) => (
-                <li key={index} className="py-4">
-                  <a href={item.href}>{item.label}</a>
-                </li>
-              ))}
-            </ul>
+           
 
             <div className="flex space-x-6">
               {username ? (

@@ -34,27 +34,27 @@ const signupSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  liked_products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sellingproduct' }]
+  liked_products:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Sellingproduct'}]
 });
 
 //search api
 
-app.get('/search', (req, res) => {
-
+app.get('/search', (req, res)=>{
+  
   let search = req.query.search;
 
   Sellingproduct.find({
-    $or: [
-      { title: { $regex: new RegExp(search, 'i') } },
-      { description: { $regex: new RegExp(search, 'i') } },
-      { price: { $regex: new RegExp(search, 'i') } },
+    $or:[
+    { title: {$regex : new RegExp(search, 'i') } },
+    { description: {$regex :new RegExp(search, 'i')} },
+    { price: {$regex : new RegExp(search, 'i')} },
     ]
   })
     .then((results) => {
       res.send({ message: 'success', products: results });
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err); 
       res.send({ message: 'server error' });
     });
 })
@@ -64,21 +64,22 @@ app.get('/search', (req, res) => {
 
 // likeproduct
 
-app.post('/like_product', (req, res) => {
+app.post('/like_product',(req,res)=>{
   let productId = req.body.productId;
   let userId = req.body.userId;
+  console.log(req.body);
+  
 
-
-  SignupUser.updateOne({ _id: new ObjectId(userId) }, { $addToSet: { liked_products: productId } })
-    .then((result) => {
-      if (result.modifiedCount === 0) {
-        throw new Error('No document matched');
-      }
-      res.json({ message: 'Like success' });
-    })
-    .catch((err) => {
-      res.status(500).json({ message: 'Server error occurred', error: err.message });
-    });
+  SignupUser.updateOne({ _id: new ObjectId(userId)} , { $addToSet : {liked_products : productId}})
+  .then((result) => {
+    if (result.modifiedCount === 0) {
+      throw new Error('No document matched');
+    }
+    res.json({ message: 'Like success' });
+  })
+  .catch((err) => {
+    res.status(500).json({ message: 'Server error occurred', error: err.message });
+  });
 })
 
 app.post('/liked_product', (req, res) => {
@@ -144,12 +145,12 @@ const sellprodSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-
+   
   },
   description: {
     type: String,
     required: true,
-
+    
   },
   price: {
     type: String,
@@ -159,14 +160,10 @@ const sellprodSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  images: {
+  images: { // Change this field to hold multiple images
     type: [String], // Array of strings (paths)
     required: true,
   },
-  addedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }
 });
 const Sellingproduct = mongoose.model("Sellingproduct", sellprodSchema);
 const fs = require('fs');
@@ -189,10 +186,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.post("/sell", upload.array("images", 5), async (req, res) => {
+app.post("/sell", upload.array("images", 15), async (req, res) => {
   try {
+    console.log("Request body:", req.body);  // Log the incoming request body
+    console.log("Files:", req.files);        // Log the files being uploaded
+    
     const { title, description, price, category } = req.body;
-    const addedBy = req.body.userId;
     const images = req.files.map((file) => file.path);
 
     const product = new Sellingproduct({
@@ -201,11 +200,11 @@ app.post("/sell", upload.array("images", 5), async (req, res) => {
       price,
       category,
       images,
-      addedBy
     });
 
     const savedProduct = await product.save();
-
+    console.log("Product saved:", savedProduct);  // Log the saved product
+    
     res.status(201).json({ message: "Product saved successfully", product: savedProduct });
   } catch (error) {
     console.error("Error saving product:", error.message);  // Log any errors
@@ -218,30 +217,33 @@ app.post("/sell", upload.array("images", 5), async (req, res) => {
 app.get('/sell', (req, res) => {
   Sellingproduct.find()
     .then((result) => {
-      console.log("Products fetched:", result);
+      console.log("Products fetched:", result); 
       res.send({ message: 'success', products: result });
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err); 
       res.send({ message: 'server error' });
     });
 });
 
 app.get('/sell/:pId', (req, res) => {
   console.log(req.params)
-  Sellingproduct.findOne({ _id: req.params.pId })
+  Sellingproduct.findOne({_id: req.params.pId})
     .then((result) => {
-      console.log("Product fetched:", result);
+      console.log("Product fetched:", result); 
       res.send({ message: 'success', product: result });
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err); 
       res.send({ message: 'server error' });
     });
 });
 
 const PORT = 8000;
 
+app.get("/ping", (_req, res) => {
+  res.send("pong");
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
