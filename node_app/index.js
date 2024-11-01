@@ -4,11 +4,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
-const path = require('path');
+const path = require("path");
 app.use(cors());
 app.use(express.json());
-const { ObjectId } = require('mongodb');
-
+const { ObjectId } = require("mongodb");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/ecom")
@@ -34,75 +33,83 @@ const signupSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  liked_products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sellingproduct' }]
+  mobile: {
+    type: String,
+    required: true,
+  },
+  liked_products: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Sellingproduct" },
+  ],
 });
 
 //search api
 
-app.get('/search', (req, res) => {
-
+app.get("/search", (req, res) => {
   let search = req.query.search;
 
   Sellingproduct.find({
     $or: [
-      { title: { $regex: new RegExp(search, 'i') } },
-      { description: { $regex: new RegExp(search, 'i') } },
-      { price: { $regex: new RegExp(search, 'i') } },
-    ]
+      { title: { $regex: new RegExp(search, "i") } },
+      { description: { $regex: new RegExp(search, "i") } },
+      { price: { $regex: new RegExp(search, "i") } },
+    ],
   })
     .then((results) => {
-      res.send({ message: 'success', products: results });
+      res.send({ message: "success", products: results });
     })
     .catch((err) => {
       console.error(err);
-      res.send({ message: 'server error' });
+      res.send({ message: "server error" });
     });
-})
-
-
-
+});
 
 // likeproduct
 
-app.post('/like_product', (req, res) => {
+app.post("/like_product", (req, res) => {
   let productId = req.body.productId;
   let userId = req.body.userId;
 
-
-  SignupUser.updateOne({ _id: new ObjectId(userId) }, { $addToSet: { liked_products: productId } })
+  SignupUser.updateOne(
+    { _id: new ObjectId(userId) },
+    { $addToSet: { liked_products: productId } }
+  )
     .then((result) => {
       if (result.modifiedCount === 0) {
-        throw new Error('No document matched');
+        throw new Error("No document matched");
       }
-      res.json({ message: 'Like success' });
+      res.json({ message: "Like success" });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Server error occurred', error: err.message });
+      res
+        .status(500)
+        .json({ message: "Server error occurred", error: err.message });
     });
-})
+});
 
-app.post('/liked_product', (req, res) => {
-  SignupUser.findOne().populate('liked_products')
+app.post("/liked_product", (req, res) => {
+  SignupUser.findOne()
+    .populate("liked_products")
     .then((result) => {
-      res.send({ message: 'success', products: result.liked_products });
+      res.send({ message: "success", products: result.liked_products });
     })
     .catch(() => {
-      res.send({ message: 'server error' });
+      res.send({ message: "server error" });
     });
 });
 
 const SignupUser = mongoose.model("signupData", signupSchema);
 
-// Signup Route 
+// Signup Route
 
 app.post("/signup", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, mobile } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newSignup = new SignupUser({
       username,
       email,
       password: hashedPassword,
+      mobile,
     });
     await newSignup.save();
     res.status(201).json({ message: "User added successfully" });
@@ -131,7 +138,11 @@ app.post("/login", async (req, res) => {
     }
 
     // Return success response (you can also add JWT for session management)
-    res.json({ msg: "Login successful", username: user.username, userId: user._id });
+    res.json({
+      msg: "Login successful",
+      username: user.username,
+      userId: user._id,
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server error");
@@ -144,12 +155,10 @@ const sellprodSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-
   },
   description: {
     type: String,
     required: true,
-
   },
   price: {
     type: String,
@@ -165,25 +174,28 @@ const sellprodSchema = new mongoose.Schema({
   },
   addedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }
+    ref: "User",
+  },
 });
 const Sellingproduct = mongoose.model("Sellingproduct", sellprodSchema);
-const fs = require('fs');
+const fs = require("fs");
 const { type } = require("os");
 const { title } = require("process");
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads");
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
   },
 });
 
@@ -201,47 +213,75 @@ app.post("/sell", upload.array("images", 5), async (req, res) => {
       price,
       category,
       images,
-      addedBy
+      addedBy,
     });
 
     const savedProduct = await product.save();
 
-    res.status(201).json({ message: "Product saved successfully", product: savedProduct });
+    res
+      .status(201)
+      .json({ message: "Product saved successfully", product: savedProduct });
   } catch (error) {
-    console.error("Error saving product:", error.message);  // Log any errors
+    console.error("Error saving product:", error.message); // Log any errors
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-
-
-app.get('/sell', (req, res) => {
+app.get("/sell", (req, res) => {
   Sellingproduct.find()
     .then((result) => {
       console.log("Products fetched:", result);
-      res.send({ message: 'success', products: result });
+      res.send({ message: "success", products: result });
     })
     .catch((err) => {
       console.error(err);
-      res.send({ message: 'server error' });
+      res.send({ message: "server error" });
     });
 });
 
-app.get('/sell/:pId', (req, res) => {
-  console.log(req.params)
+app.get("/sell/:pId", (req, res) => {
+  console.log(req.params);
   Sellingproduct.findOne({ _id: req.params.pId })
     .then((result) => {
       console.log("Product fetched:", result);
-      res.send({ message: 'success', product: result });
+      res.send({ message: "success", product: result });
     })
     .catch((err) => {
       console.error(err);
-      res.send({ message: 'server error' });
+      res.send({ message: "server error" });
     });
 });
 
-const PORT = 8000;
+// contact details
 
+app.get("/get-user/:uId", (req, res) => {
+  const _userId = req.params.uId;
+
+  SignupUser.findOne({ _id: _userId })
+    .then((result) => {
+      if (!result) {
+        // No user found with the provided ID
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      // If user is found, send user data
+      res.send({
+        message: "success",
+        user: {
+          email: result.email,
+          mobile: result.mobile,
+          username: result.username,
+        },
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send({ message: "server error" });
+    });
+});
+
+
+const PORT = 8000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

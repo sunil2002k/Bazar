@@ -7,6 +7,7 @@ const SignUp = () => {
     username: "",
     email: "",
     password: "",
+    mobile: "",
   });
   const onChangeData = (e) => {
     const { name, value } = e.target;
@@ -28,6 +29,7 @@ const SignUp = () => {
         username: "",
         email: "",
         password: "",
+        mobile: "",
       });
     } catch (error) {
       alert("error");
@@ -47,6 +49,7 @@ const SignUp = () => {
             >
               Username
             </label>
+
             <input
               id="username"
               name="username"
@@ -55,6 +58,25 @@ const SignUp = () => {
               onChange={onChangeData}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md"
               placeholder="Your username"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="mobile"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Mobile number
+            </label>
+
+            <input
+              id=""
+              name="mobile"
+              type="text"
+              value={signData.mobile}
+              onChange={onChangeData}
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md"
+              placeholder="Your mobile"
               required
             />
           </div>

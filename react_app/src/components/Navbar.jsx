@@ -18,7 +18,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
     localStorage.removeItem("username"); // Clear localStorage
     navigate("/login"); // Redirect to login page
   };
-
+console.log(navigator.geolocation.getCurrentPosition)
   const handleHome = () => {
     navigate("/");
     resetSearch();

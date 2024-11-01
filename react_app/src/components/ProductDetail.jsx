@@ -5,6 +5,8 @@ import Navbar from "./Navbar";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState();
+  const [user, setuser] = useState();
+  console.log(user,"userrr");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [search, setSearch] = useState("");
   const [issearch, setisSearch] = useState(false);
@@ -30,6 +32,17 @@ const ProductDetail = () => {
   }, [p.productId]);
   const handleContact = (addedBy) => {
     console.log("id", addedBy);
+    const url = 'http://localhost:8000/get-user/'+ addedBy;
+    axios
+      .get(url)
+      .then((res) => {
+        if (res.data.user) {
+          setuser(res.data.user);
+        }
+      })
+      .catch(() => {
+        alert("Server error occurred");
+      });
   };
 
   return (
@@ -78,6 +91,12 @@ const ProductDetail = () => {
                 Contact details
               </button>
             )}
+            {user && user.username &&  (<h4>{user.username}</h4>
+          )}
+          {user && user.mobile &&  (<h4>{user.mobile}</h4>
+          )}
+          {user && user.email &&  (<h4>{user.email}</h4>
+          )}
           </div>
         )}
       </div>
