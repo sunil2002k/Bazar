@@ -19,6 +19,8 @@ import Sell from "./components/Sell";
 import Productcat from "./components/Productcat";
 import Likedproduct from "./components/Likedproduct";
 import ProductDetail from "./components/ProductDetail";
+import Myproduct from "./components/MyProduct";
+import MyProfile from "./components/MyProfile";
 
 
 const router = createBrowserRouter([
@@ -40,8 +42,16 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/myprofile",
+    element: <MyProfile />,
+  },
+  {
     path: "/signup",
     element: <SignUp />,
+  },
+  {
+    path: "/myproduct",
+    element: <Myproduct/>,
   },
   {
     path: "/categories",

@@ -31,7 +31,7 @@ function Home(props) {
   };
 
   const handleClick = async () => {
-    const url = "http://localhost:8000/search?search=" + search;
+    const url = "http://localhost:8000/search?search=" + search + '&loc=' + localStorage.getItem('userloc');
     await axios
       .get(url)
       .then((res) => {
@@ -98,17 +98,17 @@ function Home(props) {
                 onClick={() => handleProduct(item._id)}
               >
                 {item.images && item.images.length > 0 ? (
-                  // Directly display the first image without looping
+                
                   <div className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
                     <FaHeart
-                      className="absolute top-2 right-2 text-gray-400 text-xl cursor-pointer hover:text-red-500 transition-colors duration-200"
+                      className="absolute top-2  right-2 text-gray-400 text-xl cursor-pointer hover:text-red-500 transition-colors duration-200"
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent click from triggering `handleProduct`
                         handleLike(item._id);
                       }}
                     />
                     <img
-                      src={`http://localhost:8000/${item.images[0]}`} // Display only the first image
+                      src={`http://localhost:8000/${item.images[0]}`} 
                       alt="Product Image"
                       className="h-full w-full object-cover object-center"
                     />
@@ -143,7 +143,6 @@ function Home(props) {
                   onClick={() => handleProduct(item._id)}
                 >
                   {item.images && item.images.length > 0 ? (
-                    // Directly display the first image without looping
                     <div className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
                       <FaHeart
                         className="absolute top-2 right-2 text-gray-400 text-xl cursor-pointer hover:text-red-500 transition-colors duration-200"

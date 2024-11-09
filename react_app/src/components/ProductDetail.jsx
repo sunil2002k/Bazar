@@ -91,11 +91,11 @@ const ProductDetail = () => {
                 Contact details
               </button>
             )}
-            {user && user.username &&  (<h4>{user.username}</h4>
+            {user && user.username &&  (<h4>Username : {user.username}</h4>
           )}
-          {user && user.mobile &&  (<h4>{user.mobile}</h4>
+          {user && user.mobile &&  (<h4>Phone number : {user.mobile}</h4>
           )}
-          {user && user.email &&  (<h4>{user.email}</h4>
+          {user && user.email &&  (<h4>Email : {user.email}</h4>
           )}
           </div>
         )}

@@ -43,16 +43,25 @@ const signupSchema = new mongoose.Schema({
 });
 
 //search api
-
 app.get("/search", (req, res) => {
   let search = req.query.search;
-
+  let latitude = req.query.loc.split(",")[0];
+  let longitude = req.query.loc.split(",")[1];
   Sellingproduct.find({
     $or: [
-      { title: { $regex: new RegExp(search, "i") } },
-      { description: { $regex: new RegExp(search, "i") } },
-      { price: { $regex: new RegExp(search, "i") } },
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+      { price: { $regex: search, $options: "i" } },
     ],
+    ploc: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [parseFloat(latitude), parseFloat(longitude)],
+        },
+        $maxDistance: 500 * 1000,
+      },
+    },
   })
     .then((results) => {
       res.send({ message: "success", products: results });
@@ -94,6 +103,46 @@ app.post("/liked_product", (req, res) => {
     })
     .catch(() => {
       res.send({ message: "server error" });
+    });
+});
+
+//my ads
+
+app.post("/myproduct", (req, res) => {
+  const userId = req.body.userId;
+  Sellingproduct.find({ addedBy: userId })
+    .then((result) => {
+      res.send({ message: "success", products: result });
+    })
+    .catch(() => {
+      res.send({ message: "server error" });
+    });
+});
+
+//my profile
+
+app.get("/myprofile/:userId", (req, res) => {
+  let uid = req.params.userId;
+  SignupUser.findOne({ _id: uid })
+    .then((result) => {
+      if (!result) {
+        // No user found with the provided ID
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      // If user is found, send user data
+      res.send({
+        message: "success",
+        user: {
+          email: result.email,
+          mobile: result.mobile,
+          username: result.username,
+        },
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send({ message: "server error" });
     });
 });
 
@@ -176,7 +225,19 @@ const sellprodSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  ploc: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number],
+    },
+  },
 });
+sellprodSchema.index({ ploc: "2dsphere" });
+
 const Sellingproduct = mongoose.model("Sellingproduct", sellprodSchema);
 const fs = require("fs");
 const { type } = require("os");
@@ -205,6 +266,8 @@ app.post("/sell", upload.array("images", 5), async (req, res) => {
   try {
     const { title, description, price, category } = req.body;
     const addedBy = req.body.userId;
+    const plat = req.body.plat;
+    const plong = req.body.plong;
     const images = req.files.map((file) => file.path);
 
     const product = new Sellingproduct({
@@ -214,6 +277,7 @@ app.post("/sell", upload.array("images", 5), async (req, res) => {
       category,
       images,
       addedBy,
+      ploc: { type: "Point", coordinates: [plat, plong] },
     });
 
     const savedProduct = await product.save();
@@ -230,7 +294,6 @@ app.post("/sell", upload.array("images", 5), async (req, res) => {
 app.get("/sell", (req, res) => {
   Sellingproduct.find()
     .then((result) => {
-      console.log("Products fetched:", result);
       res.send({ message: "success", products: result });
     })
     .catch((err) => {
@@ -243,7 +306,6 @@ app.get("/sell/:pId", (req, res) => {
   console.log(req.params);
   Sellingproduct.findOne({ _id: req.params.pId })
     .then((result) => {
-      console.log("Product fetched:", result);
       res.send({ message: "success", product: result });
     })
     .catch((err) => {
@@ -279,7 +341,6 @@ app.get("/get-user/:uId", (req, res) => {
       res.status(500).send({ message: "server error" });
     });
 });
-
 
 const PORT = 8000;
 

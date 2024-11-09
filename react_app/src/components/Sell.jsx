@@ -8,13 +8,12 @@ const Sell = () => {
     description: "",
     price: "",
     category: "",
-    
-    images: [], // Handle images as an array of files
+    images: [], 
   });
   const [search, setSearch] = useState("");
   const [issearch, setisSearch] = useState(false);
 
-  const [fileNames, setFileNames] = useState([]); // State to store the file names
+  const [fileNames, setFileNames] = useState([]); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,43 +28,45 @@ const Sell = () => {
   };
 
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files); // Convert filelist to an array
-    setFileNames(files.map((file) => file.name)); // Set the file names in state
+    const files = Array.from(e.target.files); 
+    setFileNames(files.map((file) => file.name)); 
     setFormData({
       ...formData,
-      images: files, // Set the array of image files in the state
+      images: files, 
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("description", formData.description);
-    data.append("price", formData.price);
-    data.append("category", formData.category);
-    data.append("userId", localStorage.getItem('userId'))
-    
-    formData.images.forEach((image) => {
-      data.append('images', image);
-    });
-  
- 
-  
-    axios.post("http://localhost:8000/sell", data)
-      .then((res) => {
-        console.log("Success:", res.data);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      const data = new FormData();
+      data.append('plat', position.coords.latitude);
+      data.append('plong', position.coords.longitude)
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("price", formData.price);
+      data.append("category", formData.category);
+      data.append("userId", localStorage.getItem("userId"));
+
+      formData.images.forEach((image) => {
+        data.append("images", image);
       });
+
+      axios
+        .post("http://localhost:8000/sell", data)
+        .then((res) => {
+          console.log("Success:", res.data);
+        })
+        .catch((err) => {
+          console.error("Error:", err);
+        });
+    });
   };
-  
 
   return (
     <>
-      <Navbar search={search}  resetSearch={resetSearch} />
+      <Navbar search={search} resetSearch={resetSearch} />
       <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
         <h2 className="text-2xl font-bold mb-6 block text-gray-700 text-center">
           Sell Your Product
@@ -135,13 +136,11 @@ const Sell = () => {
               <option value="bikes">Bikes</option>
               <option value="mobile">Mobile</option>
               <option value="clothes">Clothes</option>
-              {
-                Categories && Categories.length>0 && Categories.map((item,index)=>{
-                  return(
-                    <option key={'option' + index}>{item}</option>
-                  )
-                })
-              }
+              {Categories &&
+                Categories.length > 0 &&
+                Categories.map((item, index) => {
+                  return <option key={"option" + index}>{item}</option>;
+                })}
             </select>
           </div>
 
@@ -153,9 +152,9 @@ const Sell = () => {
             <input
               type="file"
               id="images"
-              onChange={handleFileChange} // Handle file change separately
+              onChange={handleFileChange} 
               className="w-full px-4 py-2 border rounded-md"
-              multiple // Allow multiple files
+              multiple 
               required
             />
             {fileNames.length > 0 && (
@@ -168,7 +167,6 @@ const Sell = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            
           >
             Submit
           </button>
