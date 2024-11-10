@@ -6,7 +6,6 @@ import Navbar from "./Navbar";
 const ProductDetail = () => {
   const [product, setProduct] = useState();
   const [user, setuser] = useState();
-  console.log(user,"userrr");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [search, setSearch] = useState("");
   const [issearch, setisSearch] = useState(false);
@@ -87,7 +86,7 @@ const ProductDetail = () => {
               </h3>
             </div>
             {product.addedBy && (
-              <button className="bg-blue-500 py-2 px-3 rounded-md text-white" onClick={() => handleContact(product.addedBy)}>
+              <button className="bg-cyan-500 hover:bg-cyan-600 py-2 px-3 rounded-md text-white" onClick={() => handleContact(product.addedBy)}>
                 Contact details
               </button>
             )}

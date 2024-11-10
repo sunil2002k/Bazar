@@ -18,7 +18,8 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("username");
-    navigate("/login");
+    localStorage.removeItem("userId");
+    navigate("/");
   };
 
   const toggleDropdown = () => {
@@ -127,7 +128,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                   ref={dropdownRef}
                   className="text-white focus:outline-none"
                 >
-                  <FaUserCircle size={24} />
+                  <FaUserCircle size={24} className="text-gray-700" />
                 </button>
                 {isDropdownOpen && (
                   <div
@@ -170,7 +171,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
             ) : (
               <Link
                 to="/login"
-                className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md"
+                className="bg-cyan-500 hover:bg-cyan-600 py-2 px-3 rounded-md"
               >
                 Login
               </Link>
@@ -200,7 +201,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="bg-red-500 py-2 px-3 rounded-md text-white"
+                    className="bg-cyan-500 hover:bg-cyan-600 py-2 px-3 rounded-md text-white"
                   >
                     Logout
                   </button>
@@ -208,7 +209,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
               ) : (
                 <Link
                   to="/login"
-                  className="py-2 px-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800"
+                  className="py-2 px-3 rounded-md bg-cyan-500 hover:bg-cyan-600"
                 >
                   Login
                 </Link>

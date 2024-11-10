@@ -1,38 +1,47 @@
 import React, { useState } from "react";
-import { Link , useNavigate} from "react-router-dom";
-import axios from 'axios';
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Home from "./Home"; // Import your Home component
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: ""
   });
-  const [error, setError] = useState('');
-  const navigate = useNavigate(); 
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const onChange = e => {
+  const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/login', formData);
-      if (response.data.msg === 'Login successful') {
-        // Redirect to the home page after successful login
-        localStorage.setItem('username', response.data.username);
-        localStorage.setItem('userId', response.data.userId);
-        navigate('/');
+      const response = await axios.post("http://localhost:8000/login", formData);
+      if (response.data.msg === "Login successful") {
+        localStorage.setItem("username", response.data.username);
+        localStorage.setItem("userId", response.data.userId);
+        navigate("/");
       } else {
-        setError(response.data.msg);  // If any error message from server
+        setError(response.data.msg);
       }
     } catch (error) {
       console.error(error.response.data.msg);
     }
   };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      {/* Blurred Home Background */}
+      <div className="absolute inset-0 z-0">
+        <Home />
+      </div>
+      
+      <div className="absolute inset-0 bg-white opacity-40 backdrop-blur-lg z-0" />
+
+      {/* Login Form */}
+      <div className="relative z-10 w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg">
         <h1 className="text-3xl font-bold text-center text-gray-800">Login</h1>
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
@@ -68,7 +77,7 @@ const Login = () => {
           {error && <p className="text-red-500">{error}</p>}
           <button
             type="submit"
-            className="w-full px-4 py-2 font-bold text-white bg-gradient-to-r from-orange-500 to-orange-800 rounded-md"
+            className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md"
           >
             Login
           </button>

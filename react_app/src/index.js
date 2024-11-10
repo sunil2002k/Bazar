@@ -1,9 +1,4 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
 import "./index.css";
-// import App from './App';
-// import reportWebVitals from './reportWebVitals';
-
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -21,7 +16,7 @@ import Likedproduct from "./components/Likedproduct";
 import ProductDetail from "./components/ProductDetail";
 import Myproduct from "./components/MyProduct";
 import MyProfile from "./components/MyProfile";
-
+import Notfound from "./components/Notfound";
 
 const router = createBrowserRouter([
   
@@ -52,6 +47,10 @@ const router = createBrowserRouter([
   {
     path: "/myproduct",
     element: <Myproduct/>,
+  },
+  {
+    path: "/notfound",
+    element: <Notfound/>
   },
   {
     path: "/categories",

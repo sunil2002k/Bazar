@@ -75,28 +75,37 @@ app.get("/search", (req, res) => {
 // likeproduct
 
 app.post("/like_product", (req, res) => {
-  let productId = req.body.productId;
-  let userId = req.body.userId;
+  const { productId, userId } = req.body;
 
-  SignupUser.updateOne(
-    { _id: new ObjectId(userId) },
-    { $addToSet: { liked_products: productId } }
-  )
-    .then((result) => {
-      if (result.modifiedCount === 0) {
-        throw new Error("No document matched");
+  let isLiked;  // Declare isLiked in the outer scope
+
+  SignupUser.findOne({ _id: userId })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
       }
-      res.json({ message: "Like success" });
+
+      isLiked = user.liked_products.includes(productId);
+      const update = isLiked
+        ? { $pull: { liked_products: productId } }  // Unlike
+        : { $addToSet: { liked_products: productId } };  // Like
+
+      return SignupUser.updateOne({ _id: userId }, update);
     })
-    .catch((err) => {
-      res
-        .status(500)
-        .json({ message: "Server error occurred", error: err.message });
+    .then(() => {
+      // Use isLiked here without error
+      res.json({ message: isLiked ? "Unliked" : "Liked", isLiked: !isLiked });
+    })
+    .catch((error) => {
+      res.status(500).json({ message: "Server error", error: error.message });
     });
 });
 
+
+
+
 app.post("/liked_product", (req, res) => {
-  SignupUser.findOne()
+  SignupUser.findOne({ _id: req.body.userId })
     .populate("liked_products")
     .then((result) => {
       res.send({ message: "success", products: result.liked_products });
