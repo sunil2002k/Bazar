@@ -5,10 +5,17 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
 const path = require("path");
+const http = require('http');
+const {Server} = require('socket.io')
 app.use(cors());
 app.use(express.json());
 const { ObjectId } = require("mongodb");
-
+const httpServer = http.createServer(app);
+const io = new Server(httpServer,{
+  cors:{
+    origin:'*'
+  }
+})
 mongoose
   .connect("mongodb://127.0.0.1:27017/ecom")
   .then(() => {
@@ -126,6 +133,72 @@ app.post("/myproduct", (req, res) => {
     .catch(() => {
       res.send({ message: "server error" });
     });
+});
+
+//delete product
+
+app.post("/delete_product",(req,res)=>{
+  console.log(req.body)
+  Sellingproduct.findOne({_id : req.body.pid })
+  .then((result)=>{
+    if(result.addedBy==req.body.userId){
+      Sellingproduct.deleteOne({_id : req.body.pid})
+      .then((deleteResult)=>{
+      if(deleteResult.acknowledged)
+        res.send({message:'delete success'})
+      })
+      .catch(()=>{
+        res.send ({message:'server error'})
+      })
+    }
+  })
+  .catch(()=>{
+    res.send ({message:'server error'})
+  })
+})
+
+
+// edit product 
+
+// Multer setup for image uploads
+const storage2 = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Directory for uploaded images
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique file name
+  },
+});
+
+const upload2 = multer({ storage: storage2 });
+
+// Route to update product data
+app.post("/edit_product", upload2.array("images", 5), async (req, res) => {
+  try {
+    const { pid, title, description, price, category, userId } = req.body;
+
+    // Check if product exists and belongs to the user
+    const existingProduct = await Sellingproduct.findOne({ _id: pid, addedBy: userId });
+    if (!existingProduct) {
+      return res.status(404).json({ message: "Product not found or unauthorized access" });
+    }
+
+    // Prepare update data
+    const updateData = { title, description, price, category };
+
+    // If new images are uploaded, update images
+    if (req.files && req.files.length > 0) {
+      updateData.images = req.files.map((file) => file.path); // Store new image paths
+    }
+
+    // Update the product in the database
+    const updatedProduct = await Sellingproduct.findByIdAndUpdate(pid, updateData, { new: true });
+
+    res.status(200).json({ message: "Product updated successfully", product: updatedProduct });
+  } catch (error) {
+    console.error("Error updating product:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
 
 //my profile
@@ -251,6 +324,7 @@ const Sellingproduct = mongoose.model("Sellingproduct", sellprodSchema);
 const fs = require("fs");
 const { type } = require("os");
 const { title } = require("process");
+const { log } = require("console");
 const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
@@ -351,8 +425,23 @@ app.get("/get-user/:uId", (req, res) => {
     });
 });
 
+
+// chat system
+
+let messages =[];
+
+io.on('connection' , (socket)=>{
+  console.log('socket connected',socket.id)
+
+  socket.on('sendMsg', (data)=>{
+    messages.push(data);
+    io.emit('getMsg',messages)
+  })
+  io.emit('getMsg',messages)
+})
+
 const PORT = 8000;
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
 });

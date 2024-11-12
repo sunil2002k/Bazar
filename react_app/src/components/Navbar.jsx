@@ -19,7 +19,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
   const handleLogout = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("userId");
-    navigate("/");
+    window.location.reload();
   };
 
   const toggleDropdown = () => {
@@ -93,7 +93,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
             >
               {locations.map((item, index) => {
                 return (
-                  <option value={`${item.latitude},${item.longitude}`}>
+                  <option key={index} value={`${item.latitude},${item.longitude}`}>
                     {item.placeName}
                   </option>
                 );
@@ -161,7 +161,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="w-full text-left px-4 py-2 text-red-700  hover:bg-gray-100"
                     >
                       Logout
                     </button>

@@ -17,6 +17,7 @@ import ProductDetail from "./components/ProductDetail";
 import Myproduct from "./components/MyProduct";
 import MyProfile from "./components/MyProfile";
 import Notfound from "./components/Notfound";
+import Editproduct from "./components/Editproduct";
 
 const router = createBrowserRouter([
   
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp />,
+  },
+  {
+    path: "/editproduct/:productId",
+    element: <Editproduct />,
   },
   {
     path: "/myproduct",

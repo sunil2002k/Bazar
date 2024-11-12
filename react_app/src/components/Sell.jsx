@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import axios from "axios";
 import Categories from "./CategoriesList";
+import { useNavigate } from "react-router-dom";
 const Sell = () => {
   const [formData, setFormData] = useState({
     title: "",
@@ -12,9 +13,8 @@ const Sell = () => {
   });
   const [search, setSearch] = useState("");
   const [issearch, setisSearch] = useState(false);
-
+  const navigate = useNavigate();
   const [fileNames, setFileNames] = useState([]); 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -42,7 +42,7 @@ const Sell = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       const data = new FormData();
       data.append('plat', position.coords.latitude);
-      data.append('plong', position.coords.longitude)
+      data.append('plong', position.coords.longitude);
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("price", formData.price);
@@ -62,6 +62,7 @@ const Sell = () => {
           console.error("Error:", err);
         });
     });
+    navigate("/");
   };
 
   return (
@@ -133,9 +134,6 @@ const Sell = () => {
               required
             >
               <option value="">Select a category</option>
-              <option value="bikes">Bikes</option>
-              <option value="mobile">Mobile</option>
-              <option value="clothes">Clothes</option>
               {Categories &&
                 Categories.length > 0 &&
                 Categories.map((item, index) => {

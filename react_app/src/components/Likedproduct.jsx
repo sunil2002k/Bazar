@@ -79,7 +79,7 @@ function Likedproduct(props ) {
             // Display only the first image
             <div className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
               <FaHeart
-                className="absolute top-2 right-2 text-gray-400 text-xl cursor-pointer hover:text-red-500 transition-colors duration-200"
+                className="absolute top-2 right-2  text-xl cursor-pointer text-red-500 transition-colors duration-200"
                 onClick={() => handleLike(item._id)}
               />
               <img

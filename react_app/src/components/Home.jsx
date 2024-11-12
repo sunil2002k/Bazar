@@ -149,19 +149,20 @@ function Home(props) {
 function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
   return (
     <div
-      className="product-item rounded-lg flex flex-col p-4"
+      className="product-item rounded-lg flex flex-col p-4 border shadow-md"
       onClick={() => handleProduct(item._id)}
     >
       {item.images && item.images.length > 0 ? (
         <div className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
           <div
-            className="absolute top-2 right-2 p-2 bg-gray-200 rounded-full cursor-pointer hover:text-red-800 transition-colors duration-200"
+            className="absolute top-2 right-2 bg-gray-200 rounded-full cursor-pointer hover:text-red-800 transition-colors duration-200"
+            style={{ padding:"0.27rem" }} 
             onClick={(e) => handleLike(item._id, e)}
           >
             {Likedproducts.includes(item._id) ? (
-              <FaHeart style={{ fontSize: "2.3rem" }} className="text-red-600" />
+              <FaHeart style={{ fontSize: "1.3rem" }} className="text-red-600" />
             ) : (
-              <FaHeart style={{ fontSize: "2.3rem" }} className="text-gray-400" />
+              <FaHeart style={{ fontSize: "1.3rem" }} className="text-gray-400" />
             )}
           </div>
           <img
@@ -176,7 +177,7 @@ function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
       <div className="mt-4 flex flex-col items-start">
         <p className="text-lg font-semibold">{item.title}</p>
         <p className="text-sm pr-1">{item.category}</p>
-        <p className="mt-2 text-sm text-gray-700">{item.description}</p>
+        {/* <p className="mt-2 text-sm text-gray-700">{item.description}</p> */}
         <h3 className="mt-4 text-xl font-bold text-green-600">
           Rs. {item.price}
         </h3>
