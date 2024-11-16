@@ -4,7 +4,7 @@ import categories from './CategoriesList'
 const Productcat = (props) => {
   return (
     <>
-    <span className='cursor-pointer pl-3'>All categories</span>
+    <span className='cursor-pointer pl-3' onClick={(e)=>window.location.reload(e)}>All categories</span>
        {categories && categories.length > 0 && categories.map((item, index)=>{
         return (
           

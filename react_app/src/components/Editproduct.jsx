@@ -202,7 +202,7 @@ const Editproduct = () => {
               onChange={handleFileChange}
               className="w-full px-4 py-2 border rounded-md"
               multiple
-              required
+              
             />
             <div className="flex gap-2 mt-2">
               {newImages.map((imgUrl, index) => (

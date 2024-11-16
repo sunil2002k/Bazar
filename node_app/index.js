@@ -9,6 +9,8 @@ const http = require('http');
 const {Server} = require('socket.io')
 app.use(cors());
 app.use(express.json());
+
+
 const { ObjectId } = require("mongodb");
 const httpServer = http.createServer(app);
 const io = new Server(httpServer,{
@@ -227,6 +229,33 @@ app.get("/myprofile/:userId", (req, res) => {
       res.status(500).send({ message: "server error" });
     });
 });
+
+//edit username
+
+app.put('/myprofile/update/:id', async (req, res) => {
+  try {
+    const { username } = req.body; // New username
+    const userId = req.params.id; // User ID from URL params
+
+    // Check if the user exists and update the username
+    const updatedUser = await SignupUser.findByIdAndUpdate(
+      userId,
+      { username },
+      { new: true } // Return the updated document
+    );
+
+    // If no user is found
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, message: "Username updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Error updating username:", err.message);
+    res.status(500).json({ success: false, message: "Server error", error: err.message });
+  }
+});
+
 
 const SignupUser = mongoose.model("signupData", signupSchema);
 

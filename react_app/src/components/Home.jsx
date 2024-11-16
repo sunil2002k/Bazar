@@ -111,10 +111,11 @@ function Home(props) {
         handleClick={handleClick}
         resetSearch={resetSearch}
       />
-      <Productcat handleCategory={handleCategory} />
-      {issearch && catproducts && catproducts.length === 0 && <NotFound />}
-
       <div className="homepage">
+      <Productcat handleCategory={handleCategory} />
+      {issearch && catproducts && catproducts.length === 0 && <NotFound className="h-screen flex items-center justify-center" />}
+
+      
         {issearch && catproducts && catproducts.length > 0 ? (
           <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
             {catproducts.map((item) => (
@@ -149,7 +150,7 @@ function Home(props) {
 function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
   return (
     <div
-      className="product-item rounded-lg flex flex-col p-4 border shadow-md"
+      className="product-item rounded-lg flex flex-col p-4 border shadow-md hover:shadow-lg cursor-pointer"
       onClick={() => handleProduct(item._id)}
     >
       {item.images && item.images.length > 0 ? (

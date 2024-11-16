@@ -6,7 +6,7 @@ import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-
+import Footer from './Footer'
 function Myproduct(props) {
   const [products, setProducts] = useState([]);
   const [catproducts, setcatProducts] = useState([]);
@@ -96,11 +96,11 @@ function Myproduct(props) {
 
       <div className="homepage">
         {products && products.length > 0 ? (
-          <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+          <div className="products-container  grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
           {products.map((item, index) => (
             <div
               key={item._id || index}
-              className="product-item rounded-lg flex flex-col p-4 border"
+              className="product-item rounded-lg shadow-md flex flex-col p-4 border"
             >
               {item.images && item.images.length > 0 ? (
                 // Display only the first image
@@ -121,24 +121,29 @@ function Myproduct(props) {
               <div className="mt-4 flex flex-col items-start">
                 <p className="text-lg font-semibold">{item.title}</p>
                 <p className="text-sm pr-1">{item.category}</p>
-                <p className="mt-2 text-sm text-gray-700">{item.description}</p>
+                {/* <p className="mt-2 text-sm text-gray-700">{item.description}</p> */}
                 <h3 className="mt-4 text-xl font-bold text-green-600">
                   Rs. {item.price}
                 </h3>
               </div>
               <Link
                 to={`/editproduct/${item._id}`}
-                className=" text-red-700 mt-2 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-900"
+                className=" text-blue-700 mt-2 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 gap-3 "
               >
-                <FontAwesomeIcon icon={faEdit} className="mr-2 text-gray-500" />
-                Edit product
+                <div >
+                <FontAwesomeIcon icon={faEdit}  />
+
+                &nbsp;  Edit product
+                </div>
               </Link>
               <button
                 onClick={() => handleDel(item._id)}
-                className="text-red-700 mt-2 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+                className="text-red-700 mt-2 hover:text-white border border-red-700 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 "
               >
-                <FontAwesomeIcon icon={faTrash} className="mr-2 text-gray-500" />
-                Delete
+                <div>
+                <FontAwesomeIcon icon={faTrash} className="" />
+                &nbsp;    Delete
+                </div>
               </button>
             </div>
           ))}
@@ -147,7 +152,9 @@ function Myproduct(props) {
         ) : (
           <p>No products available</p>
         )}
+        <Footer/>
       </div>
+      
     </>
   );
 }
