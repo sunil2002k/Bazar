@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Productcat from "./Productcat";
 import axios from "axios";
-import { FaHeart } from "react-icons/fa";
+// import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -52,19 +52,19 @@ function Myproduct(props) {
     );
     setcatProducts(filteredProducts);
   };
-  const handleLike = async (productId) => {
-    let userId = localStorage.getItem("userId");
-    const url = "http://localhost:8000/like_product";
-    const data = { userId, productId };
-    await axios
-      .post(url, data)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        alert("Server error occurred");
-      });
-  };
+  // const handleLike = async (productId) => {
+  //   let userId = localStorage.getItem("userId");
+  //   const url = "http://localhost:8000/like_product";
+  //   const data = { userId, productId };
+  //   await axios
+  //     .post(url, data)
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       alert("Server error occurred");
+  //     });
+  // };
   const handleDel = (pid) => {
     if (!localStorage.getItem("userId")) {
       alert("please login first");
@@ -105,10 +105,10 @@ function Myproduct(props) {
               {item.images && item.images.length > 0 ? (
                 // Display only the first image
                 <div className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
-                  <FaHeart
+                  {/* <FaHeart
                     className="absolute top-2 right-2 text-gray-400 text-xl cursor-pointer hover:text-red-500 transition-colors duration-200"
                     onClick={() => handleLike(item._id)}
-                  />
+                  /> */}
                   <img
                     src={`http://localhost:8000/${item.images[0]}`} // Display only the first image
                     alt="Product Image"
@@ -123,7 +123,7 @@ function Myproduct(props) {
                 <p className="text-sm pr-1">{item.category}</p>
                 {/* <p className="mt-2 text-sm text-gray-700">{item.description}</p> */}
                 <h3 className="mt-4 text-xl font-bold text-green-600">
-                  Rs. {item.price}
+                  Rs. {Number(item.price).toLocaleString('en-IN')}
                 </h3>
               </div>
               <Link

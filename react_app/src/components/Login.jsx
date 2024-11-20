@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Home from "./Home"; // Import your Home component
+import Home from "./Home"; 
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -30,12 +30,12 @@ const Login = () => {
       console.error(error.response.data.msg);
     }
   };
-
+  
   return (
-    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
-      {/* Blurred Home Background */}
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center ">
       <div className="absolute inset-0 z-0">
         <Home />
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-lg"></div>
       </div>
       
       <div className="absolute inset-0 bg-white opacity-40 backdrop-blur-lg z-0" />

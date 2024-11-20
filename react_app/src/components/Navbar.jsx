@@ -41,7 +41,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
   }, []);
 
   let locations = [
-    { latitude: 27.567694, longitude: 83.404143, placeName: "Siyari, Rupandehi" },
+    { latitude: 27.567694, longitude: 83.404143, placeName: "Chhapiya, Rupandehi" },
     { latitude: 22.783602, longitude: 75.657411, placeName: "Madhya Pradesh, India" },
     { latitude: 28.202949, longitude: 83.985629, placeName: "Phewa lake, Pokhara" },
     { latitude: 27.684324, longitude: 83.430913, placeName: "Butwal, Rupandehi" },

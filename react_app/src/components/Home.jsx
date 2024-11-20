@@ -37,7 +37,7 @@ function Home(props) {
         }
       })
       .catch(() => alert("Server error occurred"));
-  }, []);
+  }, [products]);
 
   const handleLike = async (productId, e) => {
     e.stopPropagation();
@@ -180,7 +180,7 @@ function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
         <p className="text-sm pr-1">{item.category}</p>
         {/* <p className="mt-2 text-sm text-gray-700">{item.description}</p> */}
         <h3 className="mt-4 text-xl font-bold text-green-600">
-          Rs. {item.price}
+          Rs. {Number(item.price).toLocaleString('en-IN')}
         </h3>
       </div>
     </div>

@@ -14,11 +14,12 @@ const Editproduct = () => {
   });
   const [search, setSearch] = useState("");
   const [issearch, setisSearch] = useState(false);
-  const [existingImages, setExistingImages] = useState([]); // Holds URLs of existing images
-  const [newImages, setNewImages] = useState([]); // Holds previews of new images
+  const [existingImages, setExistingImages] = useState([]); 
+  const [newImages, setNewImages] = useState([]); 
   const { productId } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
+    window.scrollTo(0, 0);
     const url = `http://localhost:8000/sell/${productId}`;
     axios
       .get(url)
@@ -165,9 +166,6 @@ const Editproduct = () => {
               required
             >
               <option value="">Select a category</option>
-              <option value="bikes">Bikes</option>
-              <option value="mobile">Mobile</option>
-              <option value="clothes">Clothes</option>
               {Categories &&
                 Categories.length > 0 &&
                 Categories.map((item, index) => (

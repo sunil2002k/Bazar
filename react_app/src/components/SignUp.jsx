@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Home from "./Home"; 
 
@@ -10,7 +10,7 @@ const SignUp = () => {
     password: "",
     mobile: "",
   });
-
+  const navigate = useNavigate();
   const onChangeData = (e) => {
     const { name, value } = e.target;
     setSignData({
@@ -30,10 +30,12 @@ const SignUp = () => {
         password: "",
         mobile: "",
       });
+      navigate('/login')
     } catch (error) {
       alert("error");
     }
   };
+  
 
   return (
     <div className="relative min-h-screen overflow-hidden">

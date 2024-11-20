@@ -1,10 +1,20 @@
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { useState } from "react";
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+
+  const handleEmail = () => {
+    if (email) {
+      console.log("Email submitted:", email); // Replace with API logic
+      setEmail(''); // Clear input
+    }
+  };
+
   return (
-    <footer className=" text-gray-600 py-12">
+    <footer className="text-gray-600 py-12">
       <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6">
         {/* Logo and Description */}
         <div className="flex items-center gap-2 space-x-4">
@@ -12,8 +22,7 @@ const Footer = () => {
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-left">Bazar</h2>
             <p className="text-gray-400 text-sm text-left">
-              Your trusted online marketplace for buying and selling items
-              locally. Discover great deals or post your own ads with ease.
+              Your trusted online marketplace for buying and selling items locally. Discover great deals or post your own ads with ease.
             </p>
           </div>
         </div>
@@ -28,26 +37,17 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link
-                to="/sell"
-                className="hover:text-gray-300 transition-colors"
-              >
+              <Link to="/sell" className="hover:text-gray-300 transition-colors">
                 Sell
               </Link>
             </li>
             <li>
-              <Link
-                to="/liked_products"
-                className="hover:text-gray-300 transition-colors"
-              >
+              <Link to="/liked_products" className="hover:text-gray-300 transition-colors">
                 Liked Products
               </Link>
             </li>
             <li>
-              <Link
-                to="/myprofile"
-                className="hover:text-gray-300 transition-colors"
-              >
+              <Link to="/myprofile" className="hover:text-gray-300 transition-colors">
                 Profile
               </Link>
             </li>
@@ -62,6 +62,7 @@ const Footer = () => {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Facebook"
               className="hover:text-blue-500 transition-colors"
             >
               <FaFacebook size={28} />
@@ -70,6 +71,7 @@ const Footer = () => {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Twitter"
               className="hover:text-blue-400 transition-colors"
             >
               <FaTwitter size={28} />
@@ -78,6 +80,7 @@ const Footer = () => {
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Instagram"
               className="hover:text-pink-500 transition-colors"
             >
               <FaInstagram size={28} />
@@ -86,6 +89,7 @@ const Footer = () => {
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn"
               className="hover:text-blue-700 transition-colors"
             >
               <FaLinkedin size={28} />
@@ -103,9 +107,16 @@ const Footer = () => {
             <input
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 rounded-l-md bg-gray-800 text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              aria-label="Email Input"
             />
-            <button className="px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 transition">
+            <button
+              onClick={handleEmail}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 transition"
+              aria-label="Subscribe Button"
+            >
               Subscribe
             </button>
           </div>
@@ -121,3 +132,4 @@ const Footer = () => {
 };
 
 export default Footer;
+  
