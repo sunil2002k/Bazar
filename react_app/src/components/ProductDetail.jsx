@@ -3,19 +3,19 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
 import { FaHeart } from "react-icons/fa";
-import { Tooltip } from "react-tooltip";
 import Navbar from "./Navbar";
+import Recommendations from "./Recommendations";
 import Footer from "./Footer";
 
 let socket;
 
 const ProductDetail = () => {
-  const [product, setProduct] = useState();
-  const [user, setUser] = useState();
+  const [product, setProduct] = useState(null);
+  const [user, setUser] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [Likedproducts, setLikedProducts] = useState([]);
+  const [likedProducts, setLikedProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const { productId } = useParams();
   const [search, setSearch] = useState("");
@@ -23,7 +23,6 @@ const ProductDetail = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
     axios
       .get(`http://localhost:8000/sell/${productId}`)
       .then((res) => {
@@ -96,7 +95,7 @@ const ProductDetail = () => {
     <div>
       <Navbar resetSearch={resetSearch} />
       <div className="container mx-auto py-8 px-4">
-        {product && (
+        {product ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Product Images */}
             <div>
@@ -136,20 +135,22 @@ const ProductDetail = () => {
               <div className="flex items-center gap-2">
                 <FaHeart
                   className={`text-2xl cursor-pointer ${
-                    Likedproducts.includes(product._id)
+                    likedProducts.includes(product._id)
                       ? "text-red-500"
                       : "text-gray-400"
                   }`}
                   onClick={(e) => handleLike(product._id, e)}
                 />
                 <span>
-                  {Likedproducts.includes(product._id)
+                  {likedProducts.includes(product._id)
                     ? "Remove from favorites"
                     : "Add to favorites"}
                 </span>
               </div>
             </div>
           </div>
+        ) : (
+          <p>Loading product details...</p>
         )}
 
         {/* Product Description */}
@@ -181,9 +182,7 @@ const ProductDetail = () => {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && newMessage.trim()) {
-                  sendMessage(); // Call the sendMessage function
-                }
+                if (e.key === "Enter" && newMessage.trim()) sendMessage();
               }}
               placeholder="Type your message"
               className="flex-1 border rounded-l-lg p-2"
@@ -199,24 +198,29 @@ const ProductDetail = () => {
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-80">
               <h2 className="text-xl font-bold mb-4">Contact Details</h2>
-              {user && (
-                <div>
+              {user ? (
+                <div className="space-y-2">
                   <p>
-                    <strong>Username:</strong> {user.username}
+                    <strong className="font-semibold">Username:</strong>{" "}
+                    {user.username}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {user.mobile}
+                    <strong className="font-semibold">Phone:</strong>{" "}
+                    {user.mobile}
                   </p>
                   <p>
-                    <strong>Email:</strong> {user.email}
+                    <strong className="font-semibold">Email:</strong>{" "}
+                    {user.email}
                   </p>
                 </div>
+              ) : (
+                <p className="text-gray-500">No user details available.</p>
               )}
               <button
-                className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
+                className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg focus:outline-none"
                 onClick={() => setShowModal(false)}
               >
                 Close
@@ -225,6 +229,9 @@ const ProductDetail = () => {
           </div>
         )}
       </div>
+
+      {/* Recommendations */}
+      {product && <Recommendations productId={product._id} />}
 
       <Footer />
     </div>

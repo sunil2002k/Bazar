@@ -47,21 +47,21 @@ function Home(props) {
       return;
     }
   
-    // Determine if the product is already liked
-    const isLiked = !Likedproducts.includes(productId); // true if we are liking, false if unliking
+    
+    const isLiked = !Likedproducts.includes(productId); 
     const url = "http://localhost:8000/like_product";
     const data = { userId, productId };
   
     try {
       const response = await axios.post(url, data);
   
-      // Handle response to toggle like/unlike
+      
       if (response.data.isLiked !== undefined) {
-        // Update the liked products state
+        
         setLikedProducts((prevLiked) =>
           response.data.isLiked
-            ? [...prevLiked, productId]  // Like the product
-            : prevLiked.filter((id) => id !== productId)  // Unlike the product
+            ? [...prevLiked, productId]  
+            : prevLiked.filter((id) => id !== productId)  
         );
       } else {
         alert("Failed to update like status");
@@ -180,7 +180,7 @@ function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
         <p className="text-sm pr-1">{item.category}</p>
         {/* <p className="mt-2 text-sm text-gray-700">{item.description}</p> */}
         <h3 className="mt-4 text-xl font-bold text-green-600">
-          Rs. {Number(item.price).toLocaleString('en-IN')}
+        ₹  {Number(item.price).toLocaleString('en-IN')}
         </h3>
       </div>
     </div>

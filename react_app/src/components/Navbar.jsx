@@ -1,7 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import logo from "../assets/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaSearch, FaUserCircle } from "react-icons/fa";
 
 const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
@@ -10,6 +10,8 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
   const [loc, setLoc] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isProductDetailPage = location.pathname.startsWith('/product/');
   const username = localStorage.getItem("username");
 
   const toggleNavbar = () => setMobileDrawerOpen(!mobileDrawerOpen);
@@ -60,7 +62,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
               alt="Logo"
             />
             <span className="text-xl font-medium text-red cursor-pointer tracking-tight mr-3" onClick={handleHome}>Bazar</span>
-
+              {!isProductDetailPage }
             {/* Nearby Search */}
             <select
               className="ml-4 sm:hidden md:block"
@@ -78,7 +80,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
             </select>
 
             {/* Search Field */}
-            <div className="relative flex items-center max-w-sm w-full lg:mx-auto">
+            {!isProductDetailPage && (<div className="relative flex items-center max-w-sm w-full lg:mx-auto">
               <input
                 type="text"
                 className="w-full ml-2 md:ml-10 py-2 px-4 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -93,7 +95,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
               >
                 <FaSearch className="h-5 w-5" />
               </button>
-            </div>
+            </div>)}
           </div>
 
           {/* User Actions for Large Screens */}

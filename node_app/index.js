@@ -86,7 +86,7 @@ app.get("/search", (req, res) => {
 app.post("/like_product", (req, res) => {
   const { productId, userId } = req.body;
 
-  let isLiked;  // Declare isLiked in the outer scope
+  let isLiked;  
 
   SignupUser.findOne({ _id: userId })
     .then((user) => {
@@ -468,6 +468,23 @@ io.on('connection' , (socket)=>{
   })
   io.emit('getMsg',messages)
 })
+
+// recommendation system
+
+app.get('/recommendations/:productId', async (req, res) => {
+  const { productId } = req.params;
+  const product = await Sellingproduct.findById(productId);
+
+  if (!product) return res.status(404).send('Product not found');
+
+  const recommendations = await Sellingproduct.find({
+      category: product.category, // Example filter by category
+      _id: { $ne: productId },    // Exclude the current product
+  }).limit(5);
+
+  res.json(recommendations);
+});
+
 
 const PORT = 8000;
 
