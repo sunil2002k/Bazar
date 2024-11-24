@@ -5,19 +5,18 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
 const path = require("path");
-const http = require('http');
-const {Server} = require('socket.io')
+const http = require("http");
+const { Server } = require("socket.io");
 app.use(cors());
 app.use(express.json());
 
-
 const { ObjectId } = require("mongodb");
 const httpServer = http.createServer(app);
-const io = new Server(httpServer,{
-  cors:{
-    origin:'*'
-  }
-})
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
 mongoose
   .connect("mongodb://127.0.0.1:27017/ecom")
   .then(() => {
@@ -59,6 +58,7 @@ app.get("/search", (req, res) => {
   Sellingproduct.find({
     $or: [
       { title: { $regex: search, $options: "i" } },
+      { category: { $regex: search, $options: "i" } },
       { description: { $regex: search, $options: "i" } },
       { price: { $regex: search, $options: "i" } },
     ],
@@ -86,7 +86,7 @@ app.get("/search", (req, res) => {
 app.post("/like_product", (req, res) => {
   const { productId, userId } = req.body;
 
-  let isLiked;  
+  let isLiked;
 
   SignupUser.findOne({ _id: userId })
     .then((user) => {
@@ -96,8 +96,8 @@ app.post("/like_product", (req, res) => {
 
       isLiked = user.liked_products.includes(productId);
       const update = isLiked
-        ? { $pull: { liked_products: productId } }  // Unlike
-        : { $addToSet: { liked_products: productId } };  // Like
+        ? { $pull: { liked_products: productId } } // Unlike
+        : { $addToSet: { liked_products: productId } }; // Like
 
       return SignupUser.updateOne({ _id: userId }, update);
     })
@@ -109,9 +109,6 @@ app.post("/like_product", (req, res) => {
       res.status(500).json({ message: "Server error", error: error.message });
     });
 });
-
-
-
 
 app.post("/liked_product", (req, res) => {
   SignupUser.findOne({ _id: req.body.userId })
@@ -139,28 +136,27 @@ app.post("/myproduct", (req, res) => {
 
 //delete product
 
-app.post("/delete_product",(req,res)=>{
-  console.log(req.body)
-  Sellingproduct.findOne({_id : req.body.pid })
-  .then((result)=>{
-    if(result.addedBy==req.body.userId){
-      Sellingproduct.deleteOne({_id : req.body.pid})
-      .then((deleteResult)=>{
-      if(deleteResult.acknowledged)
-        res.send({message:'delete success'})
-      })
-      .catch(()=>{
-        res.send ({message:'server error'})
-      })
-    }
-  })
-  .catch(()=>{
-    res.send ({message:'server error'})
-  })
-})
+app.post("/delete_product", (req, res) => {
+  console.log(req.body);
+  Sellingproduct.findOne({ _id: req.body.pid })
+    .then((result) => {
+      if (result.addedBy == req.body.userId) {
+        Sellingproduct.deleteOne({ _id: req.body.pid })
+          .then((deleteResult) => {
+            if (deleteResult.acknowledged)
+              res.send({ message: "delete success" });
+          })
+          .catch(() => {
+            res.send({ message: "server error" });
+          });
+      }
+    })
+    .catch(() => {
+      res.send({ message: "server error" });
+    });
+});
 
-
-// edit product 
+// edit product
 
 // Multer setup for image uploads
 const storage2 = multer.diskStorage({
@@ -180,9 +176,14 @@ app.post("/edit_product", upload2.array("images", 5), async (req, res) => {
     const { pid, title, description, price, category, userId } = req.body;
 
     // Check if product exists and belongs to the user
-    const existingProduct = await Sellingproduct.findOne({ _id: pid, addedBy: userId });
+    const existingProduct = await Sellingproduct.findOne({
+      _id: pid,
+      addedBy: userId,
+    });
     if (!existingProduct) {
-      return res.status(404).json({ message: "Product not found or unauthorized access" });
+      return res
+        .status(404)
+        .json({ message: "Product not found or unauthorized access" });
     }
 
     // Prepare update data
@@ -194,9 +195,16 @@ app.post("/edit_product", upload2.array("images", 5), async (req, res) => {
     }
 
     // Update the product in the database
-    const updatedProduct = await Sellingproduct.findByIdAndUpdate(pid, updateData, { new: true });
+    const updatedProduct = await Sellingproduct.findByIdAndUpdate(
+      pid,
+      updateData,
+      { new: true }
+    );
 
-    res.status(200).json({ message: "Product updated successfully", product: updatedProduct });
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
   } catch (error) {
     console.error("Error updating product:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -232,7 +240,7 @@ app.get("/myprofile/:userId", (req, res) => {
 
 //edit username
 
-app.put('/myprofile/update/:id', async (req, res) => {
+app.put("/myprofile/update/:id", async (req, res) => {
   try {
     const { username } = req.body; // New username
     const userId = req.params.id; // User ID from URL params
@@ -246,16 +254,23 @@ app.put('/myprofile/update/:id', async (req, res) => {
 
     // If no user is found
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    res.json({ success: true, message: "Username updated successfully", user: updatedUser });
+    res.json({
+      success: true,
+      message: "Username updated successfully",
+      user: updatedUser,
+    });
   } catch (err) {
     console.error("Error updating username:", err.message);
-    res.status(500).json({ success: false, message: "Server error", error: err.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: err.message });
   }
 });
-
 
 const SignupUser = mongoose.model("signupData", signupSchema);
 
@@ -398,7 +413,7 @@ app.post("/sell", upload.array("images", 5), async (req, res) => {
       .status(201)
       .json({ message: "Product saved successfully", product: savedProduct });
   } catch (error) {
-    console.error("Error saving product:", error.message); // Log any errors
+    console.error("Error saving product:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -454,37 +469,35 @@ app.get("/get-user/:uId", (req, res) => {
     });
 });
 
-
 // chat system
 
-let messages =[];
+let messages = [];
 
-io.on('connection' , (socket)=>{
-  console.log('socket connected',socket.id)
+io.on("connection", (socket) => {
+  console.log("socket connected", socket.id);
 
-  socket.on('sendMsg', (data)=>{
+  socket.on("sendMsg", (data) => {
     messages.push(data);
-    io.emit('getMsg',messages)
-  })
-  io.emit('getMsg',messages)
-})
+    io.emit("getMsg", messages);
+  });
+  io.emit("getMsg", messages);
+});
 
 // recommendation system
 
-app.get('/recommendations/:productId', async (req, res) => {
+app.get("/recommendations/:productId", async (req, res) => {
   const { productId } = req.params;
   const product = await Sellingproduct.findById(productId);
 
-  if (!product) return res.status(404).send('Product not found');
+  if (!product) return res.status(404).send("Product not found");
 
   const recommendations = await Sellingproduct.find({
-      category: product.category, // Example filter by category
-      _id: { $ne: productId },    // Exclude the current product
+    category: product.category, // Example filter by category
+    _id: { $ne: productId }, // Exclude the current product
   }).limit(5);
 
   res.json(recommendations);
 });
-
 
 const PORT = 8000;
 

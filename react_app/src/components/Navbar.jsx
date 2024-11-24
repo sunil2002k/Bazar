@@ -57,7 +57,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
           <div className="flex items-center flex-shrink-0">
             <img
               onClick={handleHome}
-              className="h-10 w-10 mr-0 ml-1 cursor-pointer"
+              className="h-10 w-11 mr-0 ml-1 cursor-pointer"
               src={logo}
               alt="Logo"
             />
