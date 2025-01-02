@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import Productcat from "./Productcat";
+// import Productcat from "./Productcat";
 import axios from "axios";
 import { FaHeart } from "react-icons/fa";
 import Footer from "./Footer";
@@ -9,9 +9,9 @@ import { useNavigate } from "react-router-dom";
 function Likedproduct() {
   const [products, setProducts] = useState([]);
   const [Likedproducts, setLikedProducts] = useState([]);
-  const [catproducts, setcatProducts] = useState([]);
+  const [, setcatProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [issearch, setisSearch] = useState(false);
+  const [, setisSearch] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +36,6 @@ function Likedproduct() {
       return;
     }
 
-    const isLiked = !Likedproducts.includes(productId);
     const url = "http://localhost:8000/like_product";
     const data = { userId, productId };
 
@@ -72,12 +71,12 @@ function Likedproduct() {
     setcatProducts(filteredProducts);
   };
 
-  const handleCategory = (value) => {
-    const filteredProducts = products.filter(
-      (item) => item.category.toLowerCase() === value.toLowerCase()
-    );
-    setcatProducts(filteredProducts);
-  };
+  // const handleCategory = (value) => {
+  //   const filteredProducts = products.filter(
+  //     (item) => item.category.toLowerCase() === value.toLowerCase()
+  //   );
+  //   setcatProducts(filteredProducts);
+  // };
   const handleProduct = (_id) => {
     navigate(`/product/${_id}`);
   };
@@ -85,13 +84,13 @@ function Likedproduct() {
   return (
     <>
       <Navbar search={search} handleSearch={handleSearch} handleClick={handleClick} resetSearch={resetSearch}/>
-      <Productcat handleCategory={handleCategory} />
+      {/* <Productcat handleCategory={handleCategory} /> */}
 
       <div className="homepage">
         {products.length > 0 ? (
           <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
             {products.map((item) => (
-              <div key={item._id} className="product-item rounded-lg flex flex-col p-4 shadow-md" onClick={() => handleProduct(item._id)}>
+              <div key={item._id} className="product-item rounded-lg flex flex-col p-4 shadow-md hover:shadow-lg cursor-pointer" onClick={() => handleProduct(item._id)}>
                 {item.images && item.images.length > 0 ? (
                   <div className="product-image relative w-full h-48 overflow-hidden rounded-lg">
                     <FaHeart

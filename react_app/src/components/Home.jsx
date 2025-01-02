@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Navbar from "./Navbar";
 import Productcat from "./Productcat";
 import axios from "axios";
@@ -7,15 +7,16 @@ import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import NotFound from "./Notfound";
 
-function Home(props) {
+function Home() {
   const [products, setProducts] = useState([]);
-  const [Likedproducts, setLikedProducts] = useState([]);
-  const [catproducts, setcatProducts] = useState([]);
+  const [likedProducts, setLikedProducts] = useState([]);
+  const [catProducts, setCatProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [issearch, setisSearch] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  // Fetch all products
+  const fetchProducts = useCallback(() => {
     const url = "http://localhost:8000/sell";
     axios
       .get(url)
@@ -24,44 +25,52 @@ function Home(props) {
           setProducts(res.data.products);
         }
       })
-      .catch(() => alert("Server error occurred"));
+      .catch(() => alert("Server error occurred while fetching products"));
+  }, []);
 
-    // Fetch liked products for the logged-in user
-    const url2 = "http://localhost:8000/liked_product";
+  // Fetch liked products for the logged-in user
+  const fetchLikedProducts = useCallback(() => {
+    const url = "http://localhost:8000/liked_product";
     const data = { userId: localStorage.getItem("userId") };
     axios
-      .post(url2, data)
+      .post(url, data)
       .then((res) => {
         if (res.data.products) {
           setLikedProducts(res.data.products.map((product) => product._id));
         }
       })
-      .catch(() => alert("Server error occurred"));
-  }, [products]);
+      .catch(() =>
+        alert("Server error occurred while fetching liked products")
+      );
+  }, []);
 
+  useEffect(() => {
+    fetchProducts();
+    fetchLikedProducts();
+  }, [fetchProducts, fetchLikedProducts]);
+
+  // Handle like/unlike functionality
   const handleLike = async (productId, e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent event bubbling
     const userId = localStorage.getItem("userId");
+
     if (!userId) {
       alert("Please login first");
       return;
     }
-  
-    
-    const isLiked = !Likedproducts.includes(productId); 
+
     const url = "http://localhost:8000/like_product";
     const data = { userId, productId };
-  
+
     try {
       const response = await axios.post(url, data);
-  
-      
+
       if (response.data.isLiked !== undefined) {
-        
-        setLikedProducts((prevLiked) =>
-          response.data.isLiked
-            ? [...prevLiked, productId]  
-            : prevLiked.filter((id) => id !== productId)  
+        setLikedProducts(
+          (prevLiked) =>
+            response.data.isLiked
+              ? [...prevLiked, productId] // Add to liked
+              : prevLiked.filter((id) => id !== productId) // Remove from liked
         );
       } else {
         alert("Failed to update like status");
@@ -71,8 +80,7 @@ function Home(props) {
       alert("Server error occurred");
     }
   };
-  
-  
+
   const handleProduct = (_id) => {
     navigate(`/product/${_id}`);
   };
@@ -80,27 +88,29 @@ function Home(props) {
   const handleSearch = (value) => setSearch(value);
 
   const handleClick = async () => {
-    const url = `http://localhost:8000/search?search=${search}&loc=${localStorage.getItem("userloc")}`;
-    await axios
-      .get(url)
-      .then((res) => {
-        setcatProducts(res.data.products);
-        setisSearch(true);
-      })
-      .catch(() => alert("Server error occurred"));
+    const url = `http://localhost:8000/search?search=${search}&loc=${localStorage.getItem(
+      "userloc"
+    )}`;
+    try {
+      const res = await axios.get(url);
+      setCatProducts(res.data.products);
+      setIsSearch(true);
+    } catch (error) {
+      alert("Server error occurred while searching");
+    }
   };
 
   const handleCategory = (value) => {
     const filteredProducts = products.filter(
       (item) => item.category.toLowerCase() === value.toLowerCase()
     );
-    setcatProducts(filteredProducts);
-    setisSearch(true);
+    setCatProducts(filteredProducts);
+    setIsSearch(true);
   };
 
   const resetSearch = () => {
     setSearch("");
-    setisSearch(false);
+    setIsSearch(false);
   };
 
   return (
@@ -112,34 +122,25 @@ function Home(props) {
         resetSearch={resetSearch}
       />
       <div className="homepage">
-      <Productcat handleCategory={handleCategory} />
-      {issearch && catproducts && catproducts.length === 0 && <NotFound className="h-screen flex items-center justify-center" />}
+        <Productcat handleCategory={handleCategory} />
+        {isSearch && catProducts && catProducts.length === 0 && (
+          <NotFound className="h-screen flex items-center justify-center" />
+        )}
 
-      
-        {issearch && catproducts && catproducts.length > 0 ? (
-          <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-            {catproducts.map((item) => (
-              <ProductCard
-                key={item._id}
-                item={item}
-                Likedproducts={Likedproducts}
-                handleLike={handleLike}
-                handleProduct={handleProduct}
-              />
-            ))}
-          </div>
+        {isSearch && catProducts.length > 0 ? (
+          <ProductList
+            products={catProducts}
+            likedProducts={likedProducts}
+            handleLike={handleLike}
+            handleProduct={handleProduct}
+          />
         ) : (
-          <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-            {products.map((item) => (
-              <ProductCard
-                key={item._id}
-                item={item}
-                Likedproducts={Likedproducts}
-                handleLike={handleLike}
-                handleProduct={handleProduct}
-              />
-            ))}
-          </div>
+          <ProductList
+            products={products}
+            likedProducts={likedProducts}
+            handleLike={handleLike}
+            handleProduct={handleProduct}
+          />
         )}
       </div>
       <Footer />
@@ -147,7 +148,25 @@ function Home(props) {
   );
 }
 
-function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
+// Extracted ProductList component
+function ProductList({ products, likedProducts, handleLike, handleProduct }) {
+  return (
+    <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+      {products.map((item) => (
+        <ProductCard
+          key={item._id}
+          item={item}
+          likedProducts={likedProducts}
+          handleLike={handleLike}
+          handleProduct={handleProduct}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ProductCard component
+function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
   return (
     <div
       className="product-item rounded-lg flex flex-col p-4 border shadow-md hover:shadow-lg cursor-pointer"
@@ -157,18 +176,24 @@ function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
         <div className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
           <div
             className="absolute top-2 right-2 bg-gray-200 rounded-full cursor-pointer hover:text-red-800 transition-colors duration-200"
-            style={{ padding:"0.27rem" }} 
+            style={{ padding: "0.27rem" }}
             onClick={(e) => handleLike(item._id, e)}
           >
-            {Likedproducts.includes(item._id) ? (
-              <FaHeart style={{ fontSize: "1.3rem" }} className="text-red-600" />
+            {likedProducts.includes(item._id) ? (
+              <FaHeart
+                style={{ fontSize: "1.3rem" }}
+                className="text-red-600"
+              />
             ) : (
-              <FaHeart style={{ fontSize: "1.3rem" }} className="text-gray-400" />
+              <FaHeart
+                style={{ fontSize: "1.3rem" }}
+                className="text-gray-400"
+              />
             )}
           </div>
           <img
             src={`http://localhost:8000/${item.images[0]}`}
-            alt="Product Image"
+            alt="Product"
             className="h-full w-full object-cover object-center"
           />
         </div>
@@ -178,9 +203,8 @@ function ProductCard({ item, Likedproducts, handleLike, handleProduct }) {
       <div className="mt-4 flex flex-col items-start">
         <p className="text-lg font-semibold">{item.title}</p>
         <p className="text-sm pr-1">{item.category}</p>
-        {/* <p className="mt-2 text-sm text-gray-700">{item.description}</p> */}
         <h3 className="mt-4 text-xl font-bold text-green-600">
-        ₹  {Number(item.price).toLocaleString('en-IN')}
+          ₹ {Number(item.price).toLocaleString("en-IN")}
         </h3>
       </div>
     </div>

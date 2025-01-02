@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import Categories from "./CategoriesList";
 import { useNavigate, useParams } from "react-router-dom";
+import Footer from "./Footer";
 
 const Editproduct = () => {
   const [formData, setFormData] = useState({
@@ -222,6 +223,7 @@ const Editproduct = () => {
           </button>
         </form>
       </div>
+      <Footer/>
     </>
   );
 };

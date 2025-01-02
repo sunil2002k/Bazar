@@ -2,7 +2,7 @@ import React from 'react';
 
 const Notfound = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center py-10">
+    <div className="flex flex-col items-center justify-center w-full h-full text-center py-10">
       <div className="text-red-500 mb-4">
         {/* Placeholder for icon */}
         <svg
