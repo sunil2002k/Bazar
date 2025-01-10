@@ -128,15 +128,13 @@ app.post(
 
 // chatbot
 
-
 const {
   GoogleGenerativeAI,
   HarmCategory,
   HarmBlockThreshold,
 } = require("@google/generative-ai");
 const API_KEY = "AIzaSyCofoXP_nlZfzQI4uYZVofBn72eYE1X7h0";
-const MODEL_NAME = "gemini-pro"; 
-
+const MODEL_NAME = "gemini-pro";
 
 async function runChat(userInput) {
   const genAI = new GoogleGenerativeAI(API_KEY);
@@ -153,7 +151,7 @@ async function runChat(userInput) {
     {
       category: HarmCategory.HARM_CATEGORY_HARASSMENT,
       threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    }
+    },
   ];
 
   const chat = model.startChat({
@@ -196,26 +194,24 @@ async function runChat(userInput) {
 }
 
 // Endpoint to handle chat requests
-app.post('/chat', async (req, res) => {
+app.post("/chat", async (req, res) => {
   try {
     const userInput = req.body.message; // Match frontend key
     if (!userInput) {
       console.error("Invalid request body:", req.body); // Debug log
-      return res.status(400).json({ error: 'Invalid request body' });
+      return res.status(400).json({ error: "Invalid request body" });
     }
 
-    console.log('Incoming chat request:', userInput); // Debug log
+    console.log("Incoming chat request:", userInput); // Debug log
 
     const response = await runChat(userInput); // Google API call
-   
 
     res.json({ message: response });
   } catch (error) {
-    console.error('Error in /chat endpoint:', error); // Log the actual error
-    res.status(500).json({ message: 'Error processing your request' });
+    console.error("Error in /chat endpoint:", error); // Log the actual error
+    res.status(500).json({ message: "Error processing your request" });
   }
 });
-
 
 const PORT = 8000;
 

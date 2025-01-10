@@ -83,7 +83,7 @@ const ProductDetail = () => {
 
   const sendMessage = () => {
     const data = {
-      username: localStorage.getItem("username"),
+      username: localStorage.getItem("username") || 'Anonymous',
       text: newMessage,
       productId,
     };
