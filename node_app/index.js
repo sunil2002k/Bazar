@@ -30,6 +30,9 @@ mongoose
     console.log(`${e}`);
   });
 
+  app.post("/forgetpassword",userController.forgetpassword);
+  app.get("/resetpassword/:id/:token",userController.getresetpassword);
+  app.post("/resetpassword/:id/:token",userController.postresetpassword);
 //*  my profile
 app.get("/myprofile/:userId", userController.myprofile);
 

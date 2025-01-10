@@ -18,16 +18,16 @@ import Myproduct from "./components/MyProduct";
 import MyProfile from "./components/MyProfile";
 import Notfound from "./components/Notfound";
 import Editproduct from "./components/Editproduct";
+import Resetpassword from "./components/Resetpassword";
 
 const router = createBrowserRouter([
-  
   {
     path: "/sell",
     element: <Sell />,
   },
   {
     path: "/product/:productId",
-    element: <ProductDetail/>,
+    element: <ProductDetail />,
   },
   {
     path: "/liked_products",
@@ -38,6 +38,10 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/resetpassword/:id/:token",
+    element: <Resetpassword />,
+  },
+  {
     path: "/myprofile",
     element: <MyProfile />,
   },
@@ -45,17 +49,18 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignUp />,
   },
+
   {
     path: "/editproduct/:productId",
     element: <Editproduct />,
   },
   {
     path: "/myproduct",
-    element: <Myproduct/>,
+    element: <Myproduct />,
   },
   {
     path: "/notfound",
-    element: <Notfound/>
+    element: <Notfound />,
   },
   {
     path: "/categories",

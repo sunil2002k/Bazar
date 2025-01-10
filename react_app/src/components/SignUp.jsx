@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Home from "./Home"; 
+import Home from "./Home";
 
 const SignUp = () => {
   const [signData, setSignData] = useState({
@@ -30,12 +30,11 @@ const SignUp = () => {
         password: "",
         mobile: "",
       });
-      navigate('/login')
+      navigate("/login");
     } catch (error) {
       alert("error");
     }
   };
-  
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -54,8 +53,7 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Username
               </label>
               <input
@@ -72,8 +70,7 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="mobile"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Mobile number
               </label>
               <input
@@ -90,8 +87,7 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="Email"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <input
@@ -108,8 +104,7 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
@@ -125,8 +120,7 @@ const SignUp = () => {
             </div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md"
-            >
+              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md">
               Sign Up
             </button>
           </form>
@@ -134,8 +128,7 @@ const SignUp = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-bold text-indigo-600 hover:text-indigo-800"
-            >
+              className="font-bold text-indigo-600 hover:text-indigo-800">
               Login
             </Link>
           </p>
