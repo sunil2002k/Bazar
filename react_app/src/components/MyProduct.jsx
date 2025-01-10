@@ -52,19 +52,7 @@ function Myproduct(props) {
     );
     setcatProducts(filteredProducts);
   };
-  // const handleLike = async (productId) => {
-  //   let userId = localStorage.getItem("userId");
-  //   const url = "http://localhost:8000/like_product";
-  //   const data = { userId, productId };
-  //   await axios
-  //     .post(url, data)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       alert("Server error occurred");
-  //     });
-  // };
+
   const handleDel = (pid) => {
     if (!localStorage.getItem("userId")) {
       alert("please login first");

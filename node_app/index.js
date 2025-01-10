@@ -5,9 +5,11 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
 const path = require("path");
+const bodyParser = require("body-parser");
 const http = require("http");
 const { Server } = require("socket.io");
 app.use(cors());
+app.use(bodyParser.json());
 app.use(express.json());
 const productController = require("./controller/Productcontroller");
 const userController = require("./controller/Usercontroller");
@@ -123,6 +125,98 @@ app.post(
   upload2.array("images", 5),
   productController.editprod
 );
+
+// chatbot
+
+
+const {
+  GoogleGenerativeAI,
+  HarmCategory,
+  HarmBlockThreshold,
+} = require("@google/generative-ai");
+const API_KEY = "AIzaSyCofoXP_nlZfzQI4uYZVofBn72eYE1X7h0";
+const MODEL_NAME = "gemini-pro"; 
+
+
+async function runChat(userInput) {
+  const genAI = new GoogleGenerativeAI(API_KEY);
+  const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+
+  const generationConfig = {
+    temperature: 0.9,
+    topK: 1,
+    topP: 1,
+    maxOutputTokens: 1000,
+  };
+
+  const safetySettings = [
+    {
+      category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    }
+  ];
+
+  const chat = model.startChat({
+    generationConfig,
+    safetySettings,
+    history: [
+      {
+        role: "user",
+        parts: [
+          {
+            text: "You are Askie, a friendly assistant who works for BAZAR...",
+          },
+        ],
+      },
+      {
+        role: "model",
+        parts: [
+          {
+            text: "Hello! Welcome to BAZAR. My name is Askie. What's your name?",
+          },
+        ],
+      },
+      {
+        role: "user",
+        parts: [{ text: "Hi" }],
+      },
+      {
+        role: "model",
+        parts: [
+          {
+            text: "Hi there! Thanks for reaching out to Coding Money. Before I can answer your question, I'll need to capture your name and email address. Can you please provide that information?",
+          },
+        ],
+      },
+    ],
+  });
+
+  const result = await chat.sendMessage(userInput);
+  return result.response.text();
+}
+
+// Endpoint to handle chat requests
+app.post('/chat', async (req, res) => {
+  try {
+    const userInput = req.body.message; // Match frontend key
+    if (!userInput) {
+      console.error("Invalid request body:", req.body); // Debug log
+      return res.status(400).json({ error: 'Invalid request body' });
+    }
+
+    console.log('Incoming chat request:', userInput); // Debug log
+
+    const response = await runChat(userInput); // Google API call
+   
+
+    res.json({ message: response });
+  } catch (error) {
+    console.error('Error in /chat endpoint:', error); // Log the actual error
+    res.status(500).json({ message: 'Error processing your request' });
+  }
+});
+
+
 const PORT = 8000;
 
 httpServer.listen(PORT, () => {

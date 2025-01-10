@@ -6,6 +6,7 @@ import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import NotFound from "./Notfound";
+import Chatbot from "./Chatbot";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -143,6 +144,7 @@ function Home() {
           />
         )}
       </div>
+      <Chatbot/>
       <Footer />
     </>
   );
