@@ -108,10 +108,10 @@ module.exports.postresetpassword = async (req, res) => {
     }
 
     // Update the user's password
-    // const encryptedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     await SignupUser.updateOne(
       { _id: resetUser._id },
-      { $set: { password } }
+      { $set: { password: hashedPassword } }
     );
 
     // You can send a response or render a success page
