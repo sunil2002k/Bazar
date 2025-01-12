@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-// const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const SECRET_KEY = "rT9$wL2*pZvQ5!sY8@cX1#nG4&mU7";
 
 const signupSchema = new mongoose.Schema({
@@ -106,7 +106,6 @@ module.exports.postresetpassword = async (req, res) => {
     if (!resetUser) {
       return res.status(404).json({ message: "User not found" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Update the user's password
     const hashedPassword = await bcrypt.hash(password, 10);
