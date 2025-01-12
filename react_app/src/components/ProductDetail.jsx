@@ -128,13 +128,15 @@ const ProductDetail = () => {
               />
               {isZooming && (
                 <div
-                  className="absolute top-0 left-full ml-4 w-96 h-96 bg-red-600 border rounded-lg shadow-lg bg-no-repeat"
+                  className="absolute top-0 left-full ml-4 w-96 h-9 border rounded-lg shadow-lg bg-no-repeat"
                   style={{
                     ...zoomStyle,
                     backgroundColor: "white", // Add fallback color for testing
-                  }}
-                >
-                  
+                  }}>
+                  <img
+                    src={`http://localhost:8000/${product.images[selectedImageIndex]}`}
+                    alt={product.title}
+                  />
                 </div>
               )}
               <div className="flex gap-2 mt-4">
@@ -161,8 +163,7 @@ const ProductDetail = () => {
               </p>
               <button
                 onClick={() => handleContact(product.addedBy)}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-lg shadow hover:from-purple-600 hover:to-pink-600 transition-all"
-              >
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-lg shadow hover:from-purple-600 hover:to-pink-600 transition-all">
                 Contact Seller
               </button>
               <div className="flex items-center gap-2">
@@ -222,8 +223,7 @@ const ProductDetail = () => {
             />
             <button
               onClick={sendMessage}
-              className="bg-blue-500 text-white px-4 rounded-r-lg"
-            >
+              className="bg-blue-500 text-white px-4 rounded-r-lg">
               Send
             </button>
           </div>
@@ -254,8 +254,7 @@ const ProductDetail = () => {
               )}
               <button
                 className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg focus:outline-none"
-                onClick={() => setShowModal(false)}
-              >
+                onClick={() => setShowModal(false)}>
                 Close
               </button>
             </div>

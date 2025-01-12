@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const SECRET_KEY = "rT9$wL2*pZvQ5!sY8@cX1#nG4&mU7";
 
 const signupSchema = new mongoose.Schema({
