@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import axios from "axios";
 import Categories from "./CategoriesList";
 import { useNavigate } from "react-router-dom";
-import  picture  from "../assets/56067.jpg";
+import picture from "../assets/56067.jpg";
 
 const Sell = () => {
-  window.scrollTo(0, 0);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     category: "",
+    prod_status: "",
     images: [],
   });
   const [search, setSearch] = useState("");
@@ -33,6 +33,9 @@ const Sell = () => {
     setSearch("");
     setisSearch(false);
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -54,6 +57,7 @@ const Sell = () => {
       data.append("description", formData.description);
       data.append("price", formData.price);
       data.append("category", formData.category);
+      data.append("prod_status", formData.prod_status);
       data.append("userId", localStorage.getItem("userId"));
 
       formData.images.forEach((image) => {
@@ -76,13 +80,12 @@ const Sell = () => {
     <>
       <Navbar search={search} resetSearch={resetSearch} />
       <div
-        className="bg-white h-full mb-2 right-0 w-full"
+        className="bg-white h-full mb-2 right-0 w-full animate-fade"
         style={{
           backgroundImage: `url(${picture})`,
           backgroundSize: "contain",
           backgroundPosition: "right",
           backgroundRepeat: "no-repeat",
-          
         }}
       >
         <div className="max-w-lg  p-6 ml-72 bg-white shadow-md rounded-md ">
@@ -177,6 +180,41 @@ const Sell = () => {
                 className="w-full px-4 py-2 border rounded-md"
                 required
               />
+            </div>
+            {/* Product Status */}
+            <div className="mb-4">
+              <label htmlFor="status" className="block text-gray-700 mb-2">
+                Product Status
+              </label>
+              <div className="flex gap-4">
+                {/* Radio button for "New" */}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="new"
+                    name="prod_status" // Make sure this matches the formData field name
+                    value="New" // Value for "New" status
+                    // checked={formData.prod_status === "new"} // This ensures the "New" button is selected when formData.prod_status is "new"
+                    onChange={handleChange} // Update state on change
+                    className="cursor-pointer"
+                  />
+                  <span>New</span>
+                </label>
+
+                {/* Radio button for "Old" */}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="old"
+                    name="prod_status" // Make sure this matches the formData field name
+                    value="Old" // Value for "Old" status
+                    // checked={formData.prod_status === "old"} // This ensures the "Old" button is selected when formData.prod_status is "old"
+                    onChange={handleChange} // Update state on change
+                    className="cursor-pointer"
+                  />
+                  <span>Old</span>
+                </label>
+              </div>
             </div>
 
             {/* Product Category */}

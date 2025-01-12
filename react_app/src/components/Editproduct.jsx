@@ -101,7 +101,7 @@ const Editproduct = () => {
   return (
     <>
       <Navbar search={search} resetSearch={resetSearch} />
-      <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+      <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md animate-fade rounded-md">
         <h2 className="text-2xl font-bold mb-6 block text-gray-700 text-center">
           Edit Your Product
         </h2>

@@ -20,6 +20,8 @@ const ProductDetail = () => {
   const { productId } = useParams();
   const [search, setSearch] = useState("");
   const [issearch, setisSearch] = useState(false);
+  const [zoomStyle, setZoomStyle] = useState({});
+  const [isZooming, setIsZooming] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -83,27 +85,58 @@ const ProductDetail = () => {
 
   const sendMessage = () => {
     const data = {
-      username: localStorage.getItem("username") || 'Anonymous',
+      username: localStorage.getItem("username") || "Anonymous",
       text: newMessage,
       productId,
     };
     socket.emit("sendMsg", data);
     setNewMessage("");
   };
+  const handleMouseMove = async (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    setZoomStyle({
+      backgroundImage: `url(http://localhost:8000/${product.images[selectedImageIndex]})`,
+      backgroundPosition: `${x}% ${y}%`,
+      backgroundSize: "200%",
+    });
+
+    setIsZooming(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsZooming(false);
+  };
 
   return (
     <div>
       <Navbar resetSearch={resetSearch} />
-      <div className="container mx-auto py-8 px-4">
+      <div className="container animate-fade mx-auto py-8 px-4">
         {product ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Product Images */}
-            <div>
+            <div className="relative">
               <img
                 src={`http://localhost:8000/${product.images[selectedImageIndex]}`}
                 alt={product.title}
-                className="rounded-lg shadow-lg w-full h-80 object-cover"
+                className="rounded-lg mix-blend-multiply shadow-lg w-full  object-contain "
+                style={{ height: "28rem" }}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
               />
+              {isZooming && (
+                <div
+                  className="absolute top-0 left-full ml-4 w-96 h-96 bg-red-600 border rounded-lg shadow-lg bg-no-repeat"
+                  style={{
+                    ...zoomStyle,
+                    backgroundColor: "white", // Add fallback color for testing
+                  }}
+                >
+                  
+                </div>
+              )}
               <div className="flex gap-2 mt-4">
                 {product.images.map((image, idx) => (
                   <img
@@ -167,7 +200,7 @@ const ProductDetail = () => {
           <div className="overflow-y-auto max-h-40 border p-4 mt-4">
             {messages.length > 0 ? (
               messages.map((msg, idx) => (
-                <div key={idx} className="mb-2">
+                <div key={idx} className="mb-2 animate-slideIn">
                   <span className="font-semibold">{msg.username}:</span>{" "}
                   {msg.text}
                 </div>

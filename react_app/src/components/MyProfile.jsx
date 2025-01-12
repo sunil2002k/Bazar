@@ -62,7 +62,7 @@ const MyProfile = () => {
   return (
     <>
       <Navbar search={search} resetSearch={resetSearch} />
-      <div className="flex flex-col items-center mt-10">
+      <div className="flex animate-fade flex-col items-center mt-10">
         <h2 className="text-3xl font-bold text-gray-800">My Profile</h2>
         <p className="text-gray-500 mt-2">Manage your personal information and contact details.</p>
 

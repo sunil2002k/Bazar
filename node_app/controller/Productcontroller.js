@@ -20,6 +20,10 @@ const sellprodSchema = new mongoose.Schema({
     type: [String], // Array of strings (paths)
     required: true,
   },
+  prod_status: {
+    type: String,
+    required: true,
+  },
   addedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -138,7 +142,7 @@ module.exports.editprod = async (req, res) => {
 };
 module.exports.sellprod = async (req, res) => {
   try {
-    const { title, description, price, category } = req.body;
+    const { title, description, price, category,prod_status } = req.body;
     const addedBy = req.body.userId;
     const plat = req.body.plat;
     const plong = req.body.plong;
@@ -151,6 +155,7 @@ module.exports.sellprod = async (req, res) => {
       category,
       images,
       addedBy,
+      prod_status,
       ploc: { type: "Point", coordinates: [plat, plong] },
     });
 

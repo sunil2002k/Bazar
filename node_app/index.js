@@ -30,9 +30,9 @@ mongoose
     console.log(`${e}`);
   });
 
-  app.post("/forgetpassword",userController.forgetpassword);
-  app.get("/resetpassword/:id/:token",userController.getresetpassword);
-  app.post("/resetpassword/:id/:token",userController.postresetpassword);
+app.post("/forgetpassword", userController.forgetpassword);
+app.get("/resetpassword/:id/:token", userController.getresetpassword);
+app.post("/resetpassword/:id/:token", userController.postresetpassword);
 //*  my profile
 app.get("/myprofile/:userId", userController.myprofile);
 
@@ -185,7 +185,7 @@ async function runChat(userInput) {
         role: "model",
         parts: [
           {
-            text: "Hi there! Thanks for reaching out to Coding Money. Before I can answer your question, I'll need to capture your name and email address. Can you please provide that information?",
+            text: "Hi there! Thanks for reaching out to BAZAR. Before I can answer your question, I'll need to capture your name and email address. Can you please provide that information?",
           },
         ],
       },

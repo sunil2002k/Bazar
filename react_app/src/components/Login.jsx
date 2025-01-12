@@ -70,7 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center">
+    <div className="relative animate-fade min-h-screen overflow-hidden flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <Home />
         <div className="absolute inset-0 bg-white/30 backdrop-blur-lg"></div>

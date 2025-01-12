@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  // Ref for the chat messages container
+  const messagesEndRef = useRef(null);
+
+  // Function to scroll to the bottom of the chat
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    // Scroll to the bottom whenever messages change
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,6 +28,7 @@ function Chat() {
       ...prevMessages,
       { role: "user", content: input },
     ]);
+    setInput("");
 
     try {
       const response = await axios.post("http://localhost:8000/chat", {
@@ -33,9 +47,6 @@ function Chat() {
         { role: "assistant", content: "Error processing request" },
       ]);
     }
-
-    // Clear the input field after submission
-    setInput("");
   };
 
   return (
@@ -50,13 +61,13 @@ function Chat() {
 
       {/* Chatbot Interface */}
       {isOpen && (
-        <div className="fixed bottom-20 right-5 w-80 bg-white shadow-lg rounded-lg overflow-hidden border">
+        <div className="fixed animate-fade bottom-20 right-5 w-80 bg-white shadow-lg rounded-lg overflow-hidden border">
           {/* Header with Close Button */}
           <div className="flex justify-between items-center bg-blue-600 text-white p-3">
             <span className="font-semibold">Chat Assistant</span>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white font-bold hover:text-gray-300 transition-colors"
+              className="text-white font-bold text-2xl hover:text-gray-300 transition-colors"
             >
               ×
             </button>
@@ -74,11 +85,13 @@ function Chat() {
                 <span className="block text-sm font-semibold">
                   {msg.role === "user" ? "You" : "Assistant"}
                 </span>
-                <span className="inline-block bg-gray-200 text-gray-700 px-3 py-2 rounded-lg">
+                <span className="inline-block animate-slideIn bg-gray-200 text-gray-700 px-3 py-2 rounded-lg">
                   {msg.content}
                 </span>
               </div>
             ))}
+            {/* This empty div acts as a reference to scroll into view */}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Chat Input Section */}
@@ -90,11 +103,12 @@ function Chat() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
+              placeholder="messages..."
               className="flex-1 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg px-3 py-2"
             />
+
             <button
-              type="submit"
+              onClick={handleSubmit}
               className="ml-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Send

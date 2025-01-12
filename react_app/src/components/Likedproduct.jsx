@@ -86,7 +86,7 @@ function Likedproduct() {
       <Navbar search={search} handleSearch={handleSearch} handleClick={handleClick} resetSearch={resetSearch}/>
       {/* <Productcat handleCategory={handleCategory} /> */}
 
-      <div className="homepage">
+      <div className="homepage animate-fade">
         {products.length > 0 ? (
           <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
             {products.map((item) => (

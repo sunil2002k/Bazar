@@ -122,7 +122,7 @@ function Home() {
         handleClick={handleClick}
         resetSearch={resetSearch}
       />
-      <div className="homepage">
+      <div className="homepage animate-fade">
         <Productcat handleCategory={handleCategory} />
         {isSearch && catProducts && catProducts.length === 0 && (
           <NotFound className="h-screen flex items-center justify-center" />
@@ -171,7 +171,7 @@ function ProductList({ products, likedProducts, handleLike, handleProduct }) {
 function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
   return (
     <div
-      className="product-item rounded-lg flex flex-col p-4 border shadow-md hover:shadow-lg cursor-pointer"
+      className="product-item rounded-lg flex flex-col p-4 border shadow-md hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
       onClick={() => handleProduct(item._id)}
     >
       {item.images && item.images.length > 0 ? (
@@ -203,8 +203,18 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
         <p>No images available</p>
       )}
       <div className="mt-4 flex flex-col items-start">
-        <p className="text-lg font-semibold">{item.title}</p>
+        {/* Product Title and Product Status */}
+        <div className="flex justify-between w-full">
+          <p className="text-lg font-semibold">{item.title}</p>
+          <p className={`text-sm ${item.prod_status === "New" ? "text-green-500" : "text-gray-500"}`}>
+            {item.prod_status}
+          </p>
+        </div>
+
+        {/* Product Category */}
         <p className="text-sm pr-1">{item.category}</p>
+
+        {/* Product Price */}
         <h3 className="mt-4 text-xl font-bold text-green-600">
           ₹ {Number(item.price).toLocaleString("en-IN")}
         </h3>
@@ -212,5 +222,6 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
     </div>
   );
 }
+
 
 export default Home;
