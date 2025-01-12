@@ -106,6 +106,7 @@ module.exports.postresetpassword = async (req, res) => {
     if (!resetUser) {
       return res.status(404).json({ message: "User not found" });
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Update the user's password
     const hashedPassword = await bcrypt.hash(password, 10);
