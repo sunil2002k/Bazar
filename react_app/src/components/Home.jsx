@@ -10,6 +10,7 @@ import Chatbot from "./Chatbot";
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const [sellproducts, setSellproducts] = useState([]);
   const [likedProducts, setLikedProducts] = useState([]);
   const [catProducts, setCatProducts] = useState([]);
   const [search, setSearch] = useState("");
@@ -24,10 +25,11 @@ function Home() {
       .then((res) => {
         if (res.data.products) {
           setProducts(res.data.products);
+          setSellproducts(res.data.products);
         }
       })
       .catch(() => alert("Server error occurred while fetching products"));
-  }, []);
+  }, [sellproducts]);
 
   // Fetch liked products for the logged-in user
   const fetchLikedProducts = useCallback(() => {

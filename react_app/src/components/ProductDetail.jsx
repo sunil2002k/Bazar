@@ -92,15 +92,17 @@ const ProductDetail = () => {
     socket.emit("sendMsg", data);
     setNewMessage("");
   };
-  const handleMouseMove = async (e) => {
+  const handleMouseMove = (e) => {
     const rect = e.target.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const correctedURL = `http://localhost:8000/${product.images[selectedImageIndex]}`.replace(/\\/g, '/');
 
     setZoomStyle({
-      backgroundImage: `url(http://localhost:8000/${product.images[selectedImageIndex]})`,
+      backgroundImage: `url(${correctedURL})` ,
       backgroundPosition: `${x}% ${y}%`,
       backgroundSize: "200%",
+      backgroundRepeat: "no-repeat",
     });
 
     setIsZooming(true);
@@ -128,15 +130,11 @@ const ProductDetail = () => {
               />
               {isZooming && (
                 <div
-                  className="absolute top-0 left-full ml-4 w-96 h-96 bg-red-600 border rounded-lg shadow-lg bg-no-repeat"
-                  style={{
-                    ...zoomStyle,
-                    backgroundColor: "white", // Add fallback color for testing
-                  }}
-                >
-                  
-                </div>
+                  className="absolute top-0 left-full ml-4 w-64 h-64 border rounded-lg shadow-lg bg-no-repeat bg-white"
+                  style={zoomStyle}
+                ></div>
               )}
+
               <div className="flex gap-2 mt-4">
                 {product.images.map((image, idx) => (
                   <img
@@ -156,6 +154,7 @@ const ProductDetail = () => {
             <div className="space-y-4">
               <h1 className="text-3xl font-bold">{product.title}</h1>
               <p className="text-gray-600 text-lg">{product.category}</p>
+              <p className="text-gray-600 text-lg">{product.prod_status}</p>
               <p className="text-green-600 text-2xl font-semibold">
                 ₹ {Number(product.price).toLocaleString("en-IN")}
               </p>

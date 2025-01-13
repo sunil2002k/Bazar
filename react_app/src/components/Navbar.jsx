@@ -12,6 +12,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isProductDetailPage = location.pathname.startsWith("/product/");
+  const isSellPage = location.pathname.startsWith("/sell");
   const username = localStorage.getItem("username");
 
   const toggleNavbar = () => setMobileDrawerOpen(!mobileDrawerOpen);
@@ -90,6 +91,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
             </span>
 
             {/* Nearby Search */}
+            {(!isProductDetailPage && !isSellPage) &&(
             <select
               className="ml-4 sm:hidden md:block"
               value={loc}
@@ -106,10 +108,10 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                   {item.placeName}
                 </option>
               ))}
-            </select>
+            </select>)}
 
             {/* Search Field */}
-            {!isProductDetailPage && (
+            {(!isProductDetailPage && !isSellPage) &&(
               <div className="relative flex items-center max-w-sm w-full lg:mx-auto">
                 <input
                   type="text"

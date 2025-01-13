@@ -88,7 +88,7 @@ const Sell = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="max-w-lg  p-6 ml-72 bg-white shadow-md rounded-md ">
+        <div className="max-w-lg  p-6 ml-56 my-2 bg-white shadow-md rounded-md ">
           {/* Modal for Rules */}
           {showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
