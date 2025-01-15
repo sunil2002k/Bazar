@@ -200,7 +200,7 @@ module.exports.recommend = async (req, res) => {
   const recommendations = await Sellingproduct.find({
     category: product.category, // Example filter by category
     _id: { $ne: productId }, // Exclude the current product
-  }).limit(5);
+  }).limit(8);
 
   res.json(recommendations);
 };

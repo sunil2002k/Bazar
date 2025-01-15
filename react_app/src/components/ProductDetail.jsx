@@ -6,7 +6,8 @@ import { FaHeart } from "react-icons/fa";
 import Navbar from "./Navbar";
 import Recommendations from "./Recommendations";
 import Footer from "./Footer";
-
+import Map from "./Map";
+import "leaflet/dist/leaflet.css";
 let socket;
 
 const ProductDetail = () => {
@@ -22,12 +23,14 @@ const ProductDetail = () => {
   const [issearch, setisSearch] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
   const [isZooming, setIsZooming] = useState(false);
+  const [lensStyle, setLensStyle] = useState({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
     axios
       .get(`http://localhost:8000/sell/${productId}`)
       .then((res) => {
+        console.log(res.data.product);
         setProduct(res.data.product);
         localStorage.setItem("productId", res.data.product._id);
       })
@@ -96,13 +99,25 @@ const ProductDetail = () => {
     const rect = e.target.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    const correctedURL = `http://localhost:8000/${product.images[selectedImageIndex]}`.replace(/\\/g, '/');
+    const lensX = e.clientX - rect.left; // Get the X position of the lens
+    const lensY = e.clientY - rect.top;
+    const correctedURL =
+      `http://localhost:8000/${product.images[selectedImageIndex]}`.replace(
+        /\\/g,
+        "/"
+      );
 
     setZoomStyle({
-      backgroundImage: `url(${correctedURL})` ,
+      backgroundImage: `url(${correctedURL})`,
       backgroundPosition: `${x}% ${y}%`,
-      backgroundSize: "200%",
+      backgroundSize: "400%",
       backgroundRepeat: "no-repeat",
+    });
+    // Set lens position
+
+    setLensStyle({
+      left: `${lensX}px`,
+      top: `${lensY}px`,
     });
 
     setIsZooming(true);
@@ -123,15 +138,33 @@ const ProductDetail = () => {
               <img
                 src={`http://localhost:8000/${product.images[selectedImageIndex]}`}
                 alt={product.title}
-                className="rounded-lg mix-blend-multiply shadow-lg w-full  object-contain "
+                className="rounded-sm mix-blend-multiply  w-full  object-contain "
                 style={{ height: "28rem" }}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
               />
+              {/* Lens Effect */}
               {isZooming && (
                 <div
-                  className="absolute top-0 left-full ml-4 w-64 h-64 border rounded-lg shadow-lg bg-no-repeat bg-white"
-                  style={zoomStyle}
+                  className="absolute bg-gray-200 bg-opacity-50 border-2 border-indigo-500 rounded-full pointer-events-none"
+                  style={{
+                    ...lensStyle,
+                    width: "100px",
+                    height: "100px",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                ></div>
+              )}
+              {/* Zoomed Image */}
+              {isZooming && (
+                <div
+                  className="absolute top-0 left-full z-50 border rounded-lg shadow-lg bg-no-repeat bg-white"
+                  style={{
+                    ...zoomStyle,
+                    width: "40rem",
+                    height: "30rem",
+                    marginLeft: "2rem",
+                  }}
                 ></div>
               )}
 
@@ -152,32 +185,44 @@ const ProductDetail = () => {
 
             {/* Product Details */}
             <div className="space-y-4">
-              <h1 className="text-3xl font-bold">{product.title}</h1>
-              <p className="text-gray-600 text-lg">{product.category}</p>
-              <p className="text-gray-600 text-lg">{product.prod_status}</p>
-              <p className="text-green-600 text-2xl font-semibold">
-                ₹ {Number(product.price).toLocaleString("en-IN")}
-              </p>
-              <button
-                onClick={() => handleContact(product.addedBy)}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-lg shadow hover:from-purple-600 hover:to-pink-600 transition-all"
-              >
-                Contact Seller
-              </button>
-              <div className="flex items-center gap-2">
-                <FaHeart
-                  className={`text-2xl cursor-pointer ${
-                    likedProducts.includes(product._id)
-                      ? "text-red-500"
-                      : "text-gray-400"
-                  }`}
-                  onClick={(e) => handleLike(product._id, e)}
-                />
-                <span>
-                  {likedProducts.includes(product._id)
-                    ? "Remove from favorites"
-                    : "Add to favorites"}
-                </span>
+              {/* Product Details */}
+              <div>
+                <h1 className="text-3xl font-bold">{product.title}</h1>
+                <p className="text-gray-600 text-lg">{product.category}</p>
+                <p className="text-gray-600 text-lg">{product.prod_status}</p>
+                <p className="text-green-600 text-2xl font-semibold">
+                  रु. {Number(product.price).toLocaleString("en-IN")}
+                </p>
+                <button
+                  onClick={() => handleContact(product.addedBy)}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-lg shadow hover:from-purple-600 hover:to-pink-600 transition-all"
+                >
+                  Contact Seller
+                </button>
+                <div className="flex items-center gap-2 mt-4">
+                  <FaHeart
+                    className={`text-2xl cursor-pointer ${
+                      likedProducts.includes(product._id)
+                        ? "text-red-500"
+                        : "text-gray-400"
+                    }`}
+                    onClick={(e) => handleLike(product._id, e)}
+                  />
+                  <span>
+                    {likedProducts.includes(product._id)
+                      ? "Remove from favorites"
+                      : "Add to favorites"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Google Map */}
+              {/* Google Map Section */}
+              <div className="mt-8">
+                <h2 className="text-xl font-bold mb-4">Product Location</h2>
+                <div className="relative w-full h-96 bg-gray-200 rounded-lg shadow-lg border border-gray-300">
+                  <Map ploc={product.ploc} />
+                </div>
               </div>
             </div>
           </div>

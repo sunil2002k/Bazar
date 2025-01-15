@@ -103,6 +103,7 @@ const Sell = () => {
                       </li>
                       <li>Upload only high-quality images of the product.</li>
                       <li>Set a reasonable price for the product.</li>
+                      <li>The image must be in the aspect ratio of 3/4.</li>
                       <li>Choose the correct category for the product.</li>
                       <li>Avoid uploading prohibited items.</li>
                     </ol>

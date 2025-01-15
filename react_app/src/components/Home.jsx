@@ -218,7 +218,7 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
 
         {/* Product Price */}
         <h3 className="mt-4 text-xl font-bold text-green-600">
-          ₹ {Number(item.price).toLocaleString("en-IN")}
+        रु. {Number(item.price).toLocaleString("en-IN")}
         </h3>
       </div>
     </div>
