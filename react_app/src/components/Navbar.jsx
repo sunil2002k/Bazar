@@ -91,27 +91,28 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
             </span>
 
             {/* Nearby Search */}
-            {(!isProductDetailPage && !isSellPage) &&(
-            <select
-              className="ml-4 sm:hidden md:block"
-              value={loc}
-              onChange={(e) => {
-                localStorage.setItem("userloc", e.target.value);
-                setLoc(e.target.value);
-              }}
-            >
-              {locations.map((item, index) => (
-                <option
-                  key={index}
-                  value={`${item.latitude},${item.longitude}`}
-                >
-                  {item.placeName}
-                </option>
-              ))}
-            </select>)}
+            {!isProductDetailPage && !isSellPage && (
+              <select
+                className="ml-4 sm:hidden md:block"
+                value={loc}
+                onChange={(e) => {
+                  localStorage.setItem("userloc", e.target.value);
+                  setLoc(e.target.value);
+                }}
+              >
+                {locations.map((item, index) => (
+                  <option
+                    key={index}
+                    value={`${item.latitude},${item.longitude}`}
+                  >
+                    {item.placeName}
+                  </option>
+                ))}
+              </select>
+            )}
 
             {/* Search Field */}
-            {(!isProductDetailPage && !isSellPage) &&(
+            {!isProductDetailPage && !isSellPage && (
               <div className="relative flex items-center max-w-sm w-full lg:mx-auto">
                 <input
                   type="text"
@@ -256,7 +257,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                   <Link
                     to="/login"
                     onClick={toggleNavbar}
-                    className=" hover:bg-cyan-600 py-2 px-3  rounded-md text-white text-lg"
+                    className=" hover:bg-cyan-600 py-2 px-3  rounded-md text-black text-lg"
                   >
                     Login
                   </Link>

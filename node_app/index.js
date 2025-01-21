@@ -29,7 +29,7 @@ mongoose
   .catch((e) => {
     console.log(`${e}`);
   });
-
+//* forget password
 app.post("/forgetpassword", userController.forgetpassword);
 app.get("/resetpassword/:id/:token", userController.getresetpassword);
 app.post("/resetpassword/:id/:token", userController.postresetpassword);

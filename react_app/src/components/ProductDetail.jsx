@@ -30,7 +30,6 @@ const ProductDetail = () => {
     axios
       .get(`http://localhost:8000/sell/${productId}`)
       .then((res) => {
-        console.log(res.data.product);
         setProduct(res.data.product);
         localStorage.setItem("productId", res.data.product._id);
       })
@@ -158,7 +157,7 @@ const ProductDetail = () => {
               {/* Zoomed Image */}
               {isZooming && (
                 <div
-                  className="absolute top-0 left-full z-50 border rounded-lg shadow-lg bg-no-repeat bg-white"
+                  className="absolute top-0 left-full z-30 cursor-zoom-in border rounded-lg shadow-lg bg-no-repeat bg-white"
                   style={{
                     ...zoomStyle,
                     width: "40rem",

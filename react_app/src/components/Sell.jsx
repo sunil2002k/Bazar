@@ -176,6 +176,7 @@ const Sell = () => {
                 type="number"
                 id="price"
                 name="price"
+                min={1}
                 value={formData.price}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded-md"

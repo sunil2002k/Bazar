@@ -22,7 +22,6 @@ const sellprodSchema = new mongoose.Schema({
   },
   prod_status: {
     type: String,
-    required: true,
   },
   addedBy: {
     type: mongoose.Schema.Types.ObjectId,
