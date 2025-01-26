@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Home from "./Home";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+
 
 const SignUp = () => {
   const [signData, setSignData] = useState({
@@ -10,6 +13,7 @@ const SignUp = () => {
     password: "",
     mobile: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const onChangeData = (e) => {
     const { name, value } = e.target;
@@ -53,7 +57,8 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <input
@@ -70,7 +75,8 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="mobile"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Mobile number
               </label>
               <input
@@ -87,7 +93,8 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="Email"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <input
@@ -101,15 +108,16 @@ const SignUp = () => {
                 required
               />
             </div>
-            <div>
+            <div className="relative">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle input type
                 name="password"
                 value={signData.password}
                 onChange={onChangeData}
@@ -117,10 +125,32 @@ const SignUp = () => {
                 placeholder="********"
                 required
               />
+              {/* Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)} // Toggle state
+                className="absolute right-3 top-8 text-gray-600 hover:text-gray-800 focus:outline-none transition duration-200"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                   <FontAwesomeIcon
+                   icon={faEye}
+                   className="text-gray-500 text-lg"
+                 />
+                ) : (
+                 
+                  <FontAwesomeIcon
+                    icon={faEyeSlash}
+                    className="text-gray-500 text-lg"
+                  />
+                )}
+              </button>
             </div>
+
             <button
               type="submit"
-              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md">
+              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md"
+            >
               Sign Up
             </button>
           </form>
@@ -128,7 +158,8 @@ const SignUp = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-bold text-indigo-600 hover:text-indigo-800">
+              className="font-bold text-indigo-600 hover:text-indigo-800"
+            >
               Login
             </Link>
           </p>

@@ -10,7 +10,7 @@ import Map from "./Map";
 import "leaflet/dist/leaflet.css";
 let socket;
 
-const ProductDetail = () => {
+const ProductDetail = (props) => {
   const [product, setProduct] = useState(null);
   const [user, setUser] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -145,7 +145,7 @@ const ProductDetail = () => {
               {/* Lens Effect */}
               {isZooming && (
                 <div
-                  className="absolute bg-gray-200 bg-opacity-50 border-2 border-indigo-500 rounded-full pointer-events-none"
+                  className="absolute bg-gray-200 bg-opacity-50 border-2 border-indigo-500  pointer-events-none"
                   style={{
                     ...lensStyle,
                     width: "100px",

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Home from "./Home";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const onChange = (e) => {
@@ -25,7 +28,6 @@ const Login = () => {
   const onForgotPasswordChange = (e) => {
     setForgotPasswordEmail(e.target.value);
   };
-
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -90,7 +92,8 @@ const Login = () => {
             <div>
               <label
                 htmlFor="forgotPasswordEmail"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Enter Your Email
               </label>
               <input
@@ -107,16 +110,19 @@ const Login = () => {
             {error && <p className="text-red-500">{error}</p>}
             <button
               type="submit"
-              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md">
+              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md"
+            >
               Send Reset Link
             </button>
             <p
               className="mt-4 text-center text-sm text-gray-600 cursor-pointer"
-              onClick={() => setForgotPasswordMode(false)}>
+              onClick={() => setForgotPasswordMode(false)}
+            >
               Go to Login ?{" "}
               <Link
                 to="/login"
-                className="font-bold text-indigo-600 hover:text-indigo-800">
+                className="font-bold text-indigo-600 hover:text-indigo-800"
+              >
                 Login
               </Link>
             </p>
@@ -126,7 +132,8 @@ const Login = () => {
             <div>
               <label
                 htmlFor="Email"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <input
@@ -140,15 +147,16 @@ const Login = () => {
                 required
               />
             </div>
-            <div>
+            <div className="relative">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle input type
                 name="password"
                 value={formData.password}
                 onChange={onChange}
@@ -156,7 +164,27 @@ const Login = () => {
                 placeholder="********"
                 required
               />
+              {/* Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)} // Toggle state
+                className="absolute right-3 top-8 text-gray-600 hover:text-gray-800 focus:outline-none"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <FontAwesomeIcon
+                    icon={faEye}
+                    className="text-gray-500 text-lg"
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faEyeSlash}
+                    className="text-gray-500 text-lg"
+                  />
+                )}
+              </button>
             </div>
+
             <div className="flex items-center justify-between">
               <label className="flex items-center text-sm text-gray-700">
                 <input
@@ -170,14 +198,16 @@ const Login = () => {
               </label>
               <p
                 className="text-sm text-indigo-600 hover:text-indigo-800 cursor-pointer"
-                onClick={() => setForgotPasswordMode(true)}>
+                onClick={() => setForgotPasswordMode(true)}
+              >
                 Forgot Password?
               </p>
             </div>
             {error && <p className="text-red-500">{error}</p>}
             <button
               type="submit"
-              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md">
+              className="w-full px-4 py-2 font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-md"
+            >
               Login
             </button>
           </form>
@@ -187,7 +217,8 @@ const Login = () => {
           Don't have an account?{" "}
           <Link
             to="/signup"
-            className="font-bold text-indigo-600 hover:text-indigo-800">
+            className="font-bold text-indigo-600 hover:text-indigo-800"
+          >
             Sign Up
           </Link>
         </p>
