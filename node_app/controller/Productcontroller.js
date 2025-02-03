@@ -203,3 +203,15 @@ module.exports.recommend = async (req, res) => {
 
   res.json(recommendations);
 };
+
+module.exports.admin_delete =async (req, res) => {
+  try {
+    const product = await Sellingproduct.findByIdAndDelete(req.params.id);
+    if (!product) {
+      return res.status(404).send({ message: "Product not found" });
+    }
+    res.send({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Error deleting product" });
+  }
+}

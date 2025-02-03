@@ -32,8 +32,8 @@ const SignupUser = mongoose.model("signupData", signupSchema);
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "lightlife908@gmail.com",
-    pass: "cjbf pwxu fspi moeh",
+    user: "kunwarsunil093@gmail.com",
+    pass: "vzli wtme obqb qvfr",
   },
 });
 
@@ -105,7 +105,6 @@ module.exports.postresetpassword = async (req, res) => {
     if (!resetUser) {
       return res.status(404).json({ message: "User not found" });
     }
-  
 
     // Update the user's password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -278,4 +277,37 @@ module.exports.contactdetail = (req, res) => {
       console.error(err);
       res.status(500).send({ message: "server error" });
     });
+};
+module.exports.emailreport = async (req, res) => {
+  const { email, title, reportReason } = req.body;
+
+  if (!email || !title || !reportReason) {
+    return res.status(400).send({ message: "Missing required fields" });
+  }
+
+  // Prepare email content
+  const mailOptions = {
+    from: "kunwarsunil093@gmail.com", // Sender's email
+    to: email, // Receiver's email (owner of the reported product)
+    subject: `Report for Product: ${title}`,
+    text: `This is to inform you that your product titled "${title}" has been reported for the following reason: \n\n${reportReason}`,
+  };
+
+  // Send the email
+  try {
+    await transporter.sendMail(mailOptions);
+    res.send({ message: "Report email sent successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Error sending report email" });
+  }
+};
+
+module.exports.adminlogin = (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === "admin" && password === "sunil") {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, message: "Invalid credentials" });
+  }
 };

@@ -13,6 +13,9 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
   const location = useLocation();
   const isProductDetailPage = location.pathname.startsWith("/product/");
   const isSellPage = location.pathname.startsWith("/sell");
+  const isMyProductPage = location.pathname.startsWith("/myproduct");
+  const isLikedProductsPage = location.pathname.startsWith("/liked_products");
+  const isMyProfilePage = location.pathname.startsWith("/myprofile");
   const username = localStorage.getItem("username");
 
   const toggleNavbar = () => setMobileDrawerOpen(!mobileDrawerOpen);
@@ -91,9 +94,9 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
             </span>
 
             {/* Nearby Search */}
-            {!isProductDetailPage && !isSellPage && (
+            {!isProductDetailPage && !isSellPage &&!isLikedProductsPage && !isMyProductPage && !isMyProfilePage && (
               <select
-                className="ml-4 sm:hidden md:block"
+                className="ml-4 hidden md:block"
                 value={loc}
                 onChange={(e) => {
                   localStorage.setItem("userloc", e.target.value);
@@ -110,33 +113,33 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                 ))}
               </select>
             )}
-
-            {/* Search Field */}
-            {!isProductDetailPage && !isSellPage && (
-              <div className="relative flex items-center max-w-sm w-full lg:mx-auto">
-                <input
-                  type="text"
-                  className="w-full ml-2 md:ml-10 py-2 px-4 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && search.trim()) handleClick();
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 flex items-center justify-center text-gray-700 bg-gray-100 border border-gray-300 rounded-r-md hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  onClick={handleClick}
-                >
-                  <FaSearch className="h-5 w-5" />
-                </button>
-              </div>
-            )}
           </div>
 
+          {/* Search Field */}
+          {!isProductDetailPage && !isSellPage && !isLikedProductsPage && !isMyProductPage && !isMyProfilePage && (
+            <div className="relative flex items-center max-w-sm w-full lg:mx-auto">
+              <input
+                type="text"
+                className="w-full ml-2 md:ml-10 py-2 px-4 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && search.trim()) handleClick();
+                }}
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 flex items-center justify-center text-gray-700 bg-gray-100 border border-gray-300 rounded-r-md hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                onClick={handleClick}
+              >
+                <FaSearch className="h-5 w-5" />
+              </button>
+            </div>
+          )}
+
           {/* User Actions for Large Screens */}
-          <div className="md:hidden sm:hidden lg:flex justify-center space-x-12 items-center relative">
+          <div className="hidden lg:flex justify-center space-x-12 items-center relative">
             {username ? (
               <>
                 <button
@@ -153,9 +156,9 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                   >
                     <Link
                       to="/myprofile"
-                      className="block px-4 py-2 text-gray-700"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
-                      Hello, {username}
+                      My Profile
                     </Link>
                     <Link
                       to="/sell"
@@ -208,60 +211,67 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
 
         {/* Mobile Drawer */}
         {mobileDrawerOpen && (
-          <div
-            className=" right-0  w-full p-12 flex flex-col justify-center items-center lg:hidden
-          sticky top-0 z-50 py-3 backdrop-blur-lg  border-neutral-700/80"
-          >
-            <div className="flex flex-col space-y-4 items-center  ">
+          <div className="fixed top-16 right-0 w-full bg-white p-4 flex flex-col justify-center items-center lg:hidden z-50 shadow-lg">
+            <div className="flex flex-col space-y-4 items-center">
               {username ? (
-                <ul className="relative mx-auto">
-                  <li className="py-4">
+                <ul className="w-full">
+                  <li className="py-2">
                     <Link
                       to="/myprofile"
                       onClick={toggleNavbar}
-                      className="text-lg"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
-                      Hello, {username}
+                      My Profile
                     </Link>
+                  </li>
+                  <li className="py-2">
                     <Link
                       to="/liked_products"
                       onClick={toggleNavbar}
-                      className="py-2 px-3 rounded-md text-lg"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
                       Liked items
                     </Link>
+                  </li>
+                  <li className="py-2">
                     <Link
                       to="/sell"
                       onClick={toggleNavbar}
-                      className="py-2 px-3 text-lg"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
                       Sell
                     </Link>
+                  </li>
+                  <li className="py-2">
                     <Link
                       to="/myproduct"
                       onClick={toggleNavbar}
-                      className="py-2 px-3 text-lg"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
                       My Ads
                     </Link>
+                  </li>
+                  <li className="py-2">
                     <button
                       onClick={handleLogout}
-                      className="text-red-800 mt-2 hover:text-white border border-red-700 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg  px-5 py-2.5 text-center me-2 mb-2 "
+                      className="w-full text-left px-4 py-2 text-red-700 hover:bg-gray-100"
                     >
                       Logout
                     </button>
                   </li>
                 </ul>
               ) : (
-                <div className="sm:hidden">
-                  <Link
-                    to="/login"
-                    onClick={toggleNavbar}
-                    className=" hover:bg-cyan-600 py-2 px-3  rounded-md text-black text-lg"
-                  >
-                    Login
-                  </Link>
-                </div>
+                <ul className="w-full">
+                  <li className="py-2">
+                    <Link
+                      to="/login"
+                      onClick={toggleNavbar}
+                      className="block px-4 py-2 bg-blue-500 text-white rounded-md text-center"
+                    >
+                      Login
+                    </Link>
+                  </li>
+                </ul>
               )}
             </div>
           </div>

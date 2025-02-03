@@ -10,7 +10,7 @@ import Map from "./Map";
 import "leaflet/dist/leaflet.css";
 let socket;
 
-const ProductDetail = (props) => {
+const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [user, setUser] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);

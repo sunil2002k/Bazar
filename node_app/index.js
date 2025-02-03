@@ -216,6 +216,16 @@ app.post("/chat", async (req, res) => {
   }
 });
 
+//Admin panel
+
+// Delete product
+app.delete("/admin/product/:id", productController.admin_delete);
+
+// Send report email
+app.post("/admin/report-email", userController.emailreport);
+
+app.post("/admin/login", userController.adminlogin);
+
 const PORT = 8000;
 
 httpServer.listen(PORT, () => {

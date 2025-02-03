@@ -33,6 +33,7 @@ const Sell = () => {
     setSearch("");
     setisSearch(false);
   };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -80,7 +81,7 @@ const Sell = () => {
     <>
       <Navbar search={search} resetSearch={resetSearch} />
       <div
-        className="bg-white h-full mb-2 right-0 w-full animate-fade"
+        className="bg-white h-full mb-2 w-full animate-fade"
         style={{
           backgroundImage: `url(${picture})`,
           backgroundSize: "contain",
@@ -88,11 +89,11 @@ const Sell = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="max-w-lg  p-6 ml-56 my-2 bg-white shadow-md rounded-md ">
+        <div className="max-w-lg mx-auto p-6 my-2 bg-white shadow-md rounded-md lg:ml-56">
           {/* Modal for Rules */}
           {showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
                 <h2 className="text-xl text-center font-bold mb-4">Rules</h2>
                 <div>
                   <p>
@@ -183,6 +184,7 @@ const Sell = () => {
                 required
               />
             </div>
+
             {/* Product Status */}
             <div className="mb-4">
               <label htmlFor="status" className="block text-gray-700 mb-2">
@@ -194,10 +196,9 @@ const Sell = () => {
                   <input
                     type="radio"
                     id="new"
-                    name="prod_status" // Make sure this matches the formData field name
-                    value="New" // Value for "New" status
-                    // checked={formData.prod_status === "new"} // This ensures the "New" button is selected when formData.prod_status is "new"
-                    onChange={handleChange} // Update state on change
+                    name="prod_status"
+                    value="New"
+                    onChange={handleChange}
                     className="cursor-pointer"
                   />
                   <span>New</span>
@@ -208,10 +209,9 @@ const Sell = () => {
                   <input
                     type="radio"
                     id="old"
-                    name="prod_status" // Make sure this matches the formData field name
-                    value="Old" // Value for "Old" status
-                    // checked={formData.prod_status === "old"} // This ensures the "Old" button is selected when formData.prod_status is "old"
-                    onChange={handleChange} // Update state on change
+                    name="prod_status"
+                    value="Old"
+                    onChange={handleChange}
                     className="cursor-pointer"
                   />
                   <span>Old</span>

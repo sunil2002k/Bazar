@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import NotFound from "./Notfound";
 import Chatbot from "./Chatbot";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,8 @@ function Home() {
   const [catProducts, setCatProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [isSearch, setIsSearch] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(16);
   const navigate = useNavigate();
 
   // Fetch all products
@@ -29,7 +32,7 @@ function Home() {
         }
       })
       .catch(() => alert("Server error occurred while fetching products"));
-  }, [sellproducts]);
+  }, []);
 
   // Fetch liked products for the logged-in user
   const fetchLikedProducts = useCallback(() => {
@@ -52,28 +55,34 @@ function Home() {
     fetchLikedProducts();
   }, [fetchProducts, fetchLikedProducts]);
 
+  // Calculate the current products to display
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  // Pagination function to update current page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   // Handle like/unlike functionality
   const handleLike = async (productId, e) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     const userId = localStorage.getItem("userId");
-
     if (!userId) {
       alert("Please login first");
       return;
     }
-
     const url = "http://localhost:8000/like_product";
     const data = { userId, productId };
-
     try {
       const response = await axios.post(url, data);
-
       if (response.data.isLiked !== undefined) {
-        setLikedProducts(
-          (prevLiked) =>
-            response.data.isLiked
-              ? [...prevLiked, productId] // Add to liked
-              : prevLiked.filter((id) => id !== productId) // Remove from liked
+        setLikedProducts((prevLiked) =>
+          response.data.isLiked
+            ? [...prevLiked, productId]
+            : prevLiked.filter((id) => id !== productId)
         );
       } else {
         alert("Failed to update like status");
@@ -88,7 +97,9 @@ function Home() {
     navigate(`/product/${_id}`);
   };
 
-  const handleSearch = (value) => setSearch(value);
+  const handleSearch = (value) => {
+    setSearch(value);
+  };
 
   const handleClick = async () => {
     const url = `http://localhost:8000/search?search=${search}&loc=${localStorage.getItem(
@@ -98,6 +109,7 @@ function Home() {
       const res = await axios.get(url);
       setCatProducts(res.data.products);
       setIsSearch(true);
+      window.scrollTo(0, 0);
     } catch (error) {
       alert("Server error occurred while searching");
     }
@@ -129,7 +141,6 @@ function Home() {
         {isSearch && catProducts && catProducts.length === 0 && (
           <NotFound className="h-screen flex items-center justify-center" />
         )}
-
         {isSearch && catProducts.length > 0 ? (
           <ProductList
             products={catProducts}
@@ -138,15 +149,22 @@ function Home() {
             handleProduct={handleProduct}
           />
         ) : (
-          <ProductList
-            products={products}
-            likedProducts={likedProducts}
-            handleLike={handleLike}
-            handleProduct={handleProduct}
-          />
+          <>
+            <ProductList
+              products={currentProducts}
+              likedProducts={likedProducts}
+              handleLike={handleLike}
+              handleProduct={handleProduct}
+            />
+            <Pagination
+              productsPerPage={productsPerPage}
+              totalProducts={products.length}
+              paginate={paginate}
+            />
+          </>
         )}
       </div>
-      <Chatbot/>
+      <Chatbot />
       <Footer />
     </>
   );
@@ -205,25 +223,82 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
         <p>No images available</p>
       )}
       <div className="mt-4 flex flex-col items-start">
-        {/* Product Title and Product Status */}
         <div className="flex justify-between w-full">
           <p className="text-lg font-semibold">{item.title}</p>
-          <p className={`text-sm ${item.prod_status === "New" ? "text-green-500" : "text-gray-500"}`}>
+          <p
+            className={`text-sm ${
+              item.prod_status === "New" ? "text-green-500" : "text-gray-500"
+            }`}
+          >
             {item.prod_status}
           </p>
         </div>
-
-        {/* Product Category */}
         <p className="text-sm pr-1">{item.category}</p>
-
-        {/* Product Price */}
         <h3 className="mt-4 text-xl font-bold text-green-600">
-        रु. {Number(item.price).toLocaleString("en-IN")}
+          रु. {Number(item.price).toLocaleString("en-IN")}
         </h3>
       </div>
     </div>
   );
 }
 
+// Extracted Pagination component
+
+function Pagination({ productsPerPage, totalProducts, paginate, currentPage }) {
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      paginate(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      paginate(currentPage + 1);
+    }
+  };
+
+  return (
+    <nav className="flex justify-center items-center mt-6">
+      <button
+        onClick={handlePrevious}
+        disabled={currentPage === 1}
+        className="p-2 rounded-md border border-gray-300 text-gray-600 hover:bg-blue-50 disabled:opacity-50"
+      >
+        <ChevronLeftIcon className="h-5 w-5" />
+      </button>
+      <ul className="flex items-center space-x-1 mx-3">
+        {pageNumbers.map((number) => (
+          <li key={number}>
+            <button
+              onClick={() => paginate(number)}
+              aria-current={currentPage === number ? "page" : undefined}
+              className={`px-4 py-2 rounded-md border transition-transform duration-150 
+                ${
+                  currentPage === number
+                    ? "bg-blue-600 text-white border-blue-600 font-bold transform scale-110"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50"
+                }`}
+            >
+              {number}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={handleNext}
+        disabled={currentPage === totalPages}
+        className="p-2 rounded-md border border-gray-300 text-gray-600 hover:bg-blue-50 disabled:opacity-50"
+      >
+        <ChevronRightIcon className="h-5 w-5" />
+      </button>
+    </nav>
+  );
+}
 
 export default Home;
