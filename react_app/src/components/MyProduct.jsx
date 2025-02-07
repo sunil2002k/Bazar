@@ -100,7 +100,7 @@ function Myproduct(props) {
                   <img
                     src={`http://localhost:8000/${item.images[0]}`} // Display only the first image
                     alt="Product Image"
-                    className="h-full w-full object-cover object-center"
+                    className="h-full aspect-auto mix-blend-multiply  w-full  object-contain  object-center"
                   />
                 </div>
               ) : (

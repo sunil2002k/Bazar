@@ -94,7 +94,7 @@ function Likedproduct() {
                 {item.images && item.images.length > 0 ? (
                   <div className="product-image relative w-full h-48 overflow-hidden rounded-lg">
                     <FaHeart
-                      className={`absolute top-2 right-2 text-xl cursor-pointer ${
+                      className={`z-40 absolute top-2 right-2 text-xl cursor-pointer ${
                         Likedproducts.includes(item._id) ? "text-red-600" : "text-gray-400"
                       }`}
                       onClick={(e) => {
@@ -105,7 +105,7 @@ function Likedproduct() {
                     <img
                       src={`http://localhost:8000/${item.images[0]}`}
                       alt="Product Image"
-                      className="h-full w-full object-cover object-center"
+                      className="h-full aspect-auto mix-blend-multiply  w-full  object-contain  object-center"
                     />
                   </div>
                 ) : (

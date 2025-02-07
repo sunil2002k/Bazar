@@ -4,12 +4,13 @@ import logo from "../assets/logo.png";
 import { useState } from "react";
 
 const Footer = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
+  const username = localStorage.getItem("username");
 
   const handleEmail = () => {
     if (email) {
       console.log("Email submitted:", email); // Replace with API logic
-      setEmail(''); // Clear input
+      setEmail(""); // Clear input
     }
   };
 
@@ -22,7 +23,8 @@ const Footer = () => {
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-left">Bazar</h2>
             <p className="text-gray-400 text-sm text-left">
-              Your trusted online marketplace for buying and selling items locally. Discover great deals or post your own ads with ease.
+              Your trusted online marketplace for buying and selling items
+              locally. Discover great deals or post your own ads with ease.
             </p>
           </div>
         </div>
@@ -31,26 +33,61 @@ const Footer = () => {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Quick Links</h3>
           <ul className="space-y-2">
-            <li>
-              <Link to="/" className="hover:text-gray-300 transition-colors">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/sell" className="hover:text-gray-300 transition-colors">
-                Sell
-              </Link>
-            </li>
-            <li>
-              <Link to="/liked_products" className="hover:text-gray-300 transition-colors">
-                Liked Products
-              </Link>
-            </li>
-            <li>
-              <Link to="/myprofile" className="hover:text-gray-300 transition-colors">
-                Profile
-              </Link>
-            </li>
+            {username ? (
+              <>
+                <li>
+                  <Link
+                    to="/sell"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Sell
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/liked_products"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Liked Products
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/myprofile"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/myproduct"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    My Ads
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    to="/login"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-gray-300 transition-colors"
+                  >
+                    Signup
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
 
@@ -132,4 +169,3 @@ const Footer = () => {
 };
 
 export default Footer;
-  

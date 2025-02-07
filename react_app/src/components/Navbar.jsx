@@ -152,7 +152,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
                 {isDropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    className="absolute right-0 mt-60 w-48 bg-white rounded-md shadow-lg py-2"
+                    className="absolute right-0 mt-64 w-48 bg-white rounded-md shadow-lg py-2"
                   >
                     <Link
                       to="/myprofile"
@@ -201,9 +201,9 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
           <div className="lg:hidden flex justify-end">
             <button onClick={toggleNavbar} className="text-white">
               {mobileDrawerOpen ? (
-                <X size={24} className="text-red-500" />
+                <X size={24} className="text-red-500 ml-2" />
               ) : (
-                <Menu size={24} className="text-gray-600" />
+                <Menu size={24} className="text-gray-600 ml-2" />
               )}
             </button>
           </div>

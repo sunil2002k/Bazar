@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
@@ -8,6 +8,7 @@ import Recommendations from "./Recommendations";
 import Footer from "./Footer";
 import Map from "./Map";
 import "leaflet/dist/leaflet.css";
+
 let socket;
 
 const ProductDetail = () => {
@@ -24,6 +25,16 @@ const ProductDetail = () => {
   const [zoomStyle, setZoomStyle] = useState({});
   const [isZooming, setIsZooming] = useState(false);
   const [lensStyle, setLensStyle] = useState({});
+  // Create a ref for the messages container
+  const messagesContainerRef = useRef(null);
+
+  // Effect to scroll the container to bottom when messages change
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -192,31 +203,38 @@ const ProductDetail = () => {
                 <p className="text-green-600 text-2xl font-semibold">
                   रु. {Number(product.price).toLocaleString("en-IN")}
                 </p>
-                <button
-                  onClick={() => handleContact(product.addedBy)}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-lg shadow hover:from-purple-600 hover:to-pink-600 transition-all"
-                >
-                  Contact Seller
-                </button>
-                <div className="flex items-center gap-2 mt-4">
-                  <FaHeart
-                    className={`text-2xl cursor-pointer ${
-                      likedProducts.includes(product._id)
-                        ? "text-red-500"
-                        : "text-gray-400"
-                    }`}
+                
+                <div className="flex gap-4 mt-2">
+                  <button
+                    onClick={() => handleContact(product.addedBy)}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-lg shadow hover:from-purple-600 hover:to-pink-600 transition-all"
+                  >
+                    Contact Seller
+                  </button>
+                  <button
+                    variant="outline"
+                    className="flex hover:bg-slate-100 items-center gap-2 border-zinc-400 border-1 outline-none p-2 rounded-lg"
                     onClick={(e) => handleLike(product._id, e)}
-                  />
-                  <span>
-                    {likedProducts.includes(product._id)
-                      ? "Remove from favorites"
-                      : "Add to favorites"}
-                  </span>
+                  >
+                    <FaHeart
+                      className={`text-2xl cursor-pointer ${
+                        likedProducts.includes(product._id)
+                          ? "text-red-500"
+                          : "text-gray-400"
+                      }`}
+                    />
+                    <span>
+                      {likedProducts.includes(product._id)
+                        ? "Remove from favorites"
+                        : "Add to favorites"}
+                    </span>
+                  </button>
                 </div>
+
+               
               </div>
 
               {/* Google Map */}
-              {/* Google Map Section */}
               <div className="mt-8">
                 <h2 className="text-xl font-bold mb-4">Product Location</h2>
                 <div className="relative w-full h-96 bg-gray-200 rounded-lg shadow-lg border border-gray-300">
@@ -231,16 +249,16 @@ const ProductDetail = () => {
 
         {/* Product Description */}
         {product && (
-          <div className="mt-8 bg-gray-100 p-6 rounded-lg shadow-lg">
+          <div className="mt-8 bg-gray-100 p-6 rounded-lg ">
             <h2 className="text-xl font-bold">Product Description</h2>
             <p className="mt-4 text-gray-700">{product.description}</p>
           </div>
         )}
 
         {/* Chatbox */}
-        <div className="mt-8 bg-gray-100 p-6 rounded-lg shadow-lg">
+        <div className="mt-8 bg-gray-100 p-6 rounded-lg ">
           <h2 className="text-xl font-bold">Questions about this product</h2>
-          <div className="overflow-y-auto max-h-40 border p-4 mt-4">
+          <div ref={messagesContainerRef} className="overflow-y-auto h-40 border p-4 mt-4">
             {messages.length > 0 ? (
               messages.map((msg, idx) => (
                 <div key={idx} className="mb-2 animate-slideIn">

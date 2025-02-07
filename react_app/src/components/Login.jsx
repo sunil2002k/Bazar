@@ -9,7 +9,7 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe: false, // Added remember me state
+    rememberMe: false,
   });
   const [error, setError] = useState("");
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
@@ -39,17 +39,15 @@ const Login = () => {
       if (response.data.msg === "Login successful") {
         localStorage.setItem("username", response.data.username);
         localStorage.setItem("userId", response.data.userId);
-
         if (formData.rememberMe) {
           localStorage.setItem("rememberMe", "true");
         }
-
         navigate("/");
       } else {
         setError(response.data.msg);
       }
     } catch (error) {
-      console.error(error.response.data.msg);
+      console.error(error.response?.data?.msg || error);
     }
   };
 
@@ -72,7 +70,11 @@ const Login = () => {
   };
 
   return (
-    <div className="relative animate-fade min-h-screen overflow-hidden flex items-center justify-center">
+    // Outer container: add onClick to navigate home when clicked outside the login form
+    <div
+      className="relative animate-fade min-h-screen overflow-hidden flex items-center justify-center"
+      onClick={() => navigate("/")}
+    >
       <div className="absolute inset-0 z-0">
         <Home />
         <div className="absolute inset-0 bg-white/30 backdrop-blur-lg"></div>
@@ -80,13 +82,15 @@ const Login = () => {
 
       <div className="absolute inset-0 bg-white opacity-40 backdrop-blur-lg z-0" />
 
-      {/* Login Form */}
-      <div className="relative z-10 w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg">
+      {/* Login Form Container: stop click propagation so that clicks inside don’t trigger navigation */}
+      <div
+        className="relative z-10 w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h1 className="text-3xl font-bold text-center text-gray-800">
           {forgotPasswordMode ? "Reset Password" : "Login"}
         </h1>
 
-        {/* Conditionally render forgot password form */}
         {forgotPasswordMode ? (
           <form onSubmit={onForgotPasswordSubmit} className="space-y-4">
             <div>
@@ -118,7 +122,7 @@ const Login = () => {
               className="mt-4 text-center text-sm text-gray-600 cursor-pointer"
               onClick={() => setForgotPasswordMode(false)}
             >
-              Go to Login ?{" "}
+              Go to Login?{" "}
               <Link
                 to="/login"
                 className="font-bold text-indigo-600 hover:text-indigo-800"
@@ -156,7 +160,7 @@ const Login = () => {
               </label>
               <input
                 id="password"
-                type={showPassword ? "text" : "password"} // Toggle input type
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={onChange}
@@ -164,10 +168,9 @@ const Login = () => {
                 placeholder="********"
                 required
               />
-              {/* Toggle Button */}
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)} // Toggle state
+                onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-8 text-gray-600 hover:text-gray-800 focus:outline-none"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
@@ -184,7 +187,6 @@ const Login = () => {
                 )}
               </button>
             </div>
-
             <div className="flex items-center justify-between">
               <label className="flex items-center text-sm text-gray-700">
                 <input

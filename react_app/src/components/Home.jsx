@@ -54,6 +54,9 @@ function Home() {
     fetchProducts();
     fetchLikedProducts();
   }, [fetchProducts, fetchLikedProducts]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
 
   // Calculate the current products to display
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -160,6 +163,7 @@ function Home() {
               productsPerPage={productsPerPage}
               totalProducts={products.length}
               paginate={paginate}
+              currentPage={currentPage}
             />
           </>
         )}
@@ -197,7 +201,7 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
       {item.images && item.images.length > 0 ? (
         <div className="product-image relative aspect-w-1 aspect-h-1 w-full h-48 overflow-hidden rounded-lg">
           <div
-            className="absolute top-2 right-2 bg-gray-200 rounded-full cursor-pointer hover:text-red-800 transition-colors duration-200"
+            className="absolute z-40 top-2 right-2 bg-gray-200 rounded-full cursor-pointer hover:text-red-800 transition-colors duration-200"
             style={{ padding: "0.27rem" }}
             onClick={(e) => handleLike(item._id, e)}
           >
@@ -216,7 +220,7 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
           <img
             src={`http://localhost:8000/${item.images[0]}`}
             alt="Product"
-            className="h-full w-full object-cover object-center"
+            className="h-full aspect-auto mix-blend-multiply  w-full  object-contain  object-center"
           />
         </div>
       ) : (
@@ -276,7 +280,9 @@ function Pagination({ productsPerPage, totalProducts, paginate, currentPage }) {
         {pageNumbers.map((number) => (
           <li key={number}>
             <button
-              onClick={() => paginate(number)}
+              onClick={() => {
+                paginate(number);
+              }}
               aria-current={currentPage === number ? "page" : undefined}
               className={`px-4 py-2 rounded-md border transition-transform duration-150 
                 ${
