@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion"; // Import Framer Motion
 import Navbar from "./Navbar";
 import Productcat from "./Productcat";
 import axios from "axios";
@@ -54,6 +55,7 @@ function Home() {
     fetchProducts();
     fetchLikedProducts();
   }, [fetchProducts, fetchLikedProducts]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentPage]);
@@ -139,7 +141,13 @@ function Home() {
         handleClick={handleClick}
         resetSearch={resetSearch}
       />
-      <div className="homepage animate-fade">
+      {/* Wrap the homepage content with a motion.div for animation */}
+      <motion.div
+        className="homepage"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
         <Productcat handleCategory={handleCategory} />
         {isSearch && catProducts && catProducts.length === 0 && (
           <NotFound className="h-screen flex items-center justify-center" />
@@ -167,7 +175,7 @@ function Home() {
             />
           </>
         )}
-      </div>
+      </motion.div>
       <Chatbot />
       <Footer />
     </>
@@ -195,7 +203,7 @@ function ProductList({ products, likedProducts, handleLike, handleProduct }) {
 function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
   return (
     <div
-      className="product-item rounded-lg flex flex-col p-4 border shadow-md hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+      className="product-item rounded-lg flex flex-col p-4 border shadow-md hover:shadow-lg hover:scale-[1.02] transition duration-300 ease-in-out cursor-pointer"
       onClick={() => handleProduct(item._id)}
     >
       {item.images && item.images.length > 0 ? (
@@ -206,21 +214,15 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
             onClick={(e) => handleLike(item._id, e)}
           >
             {likedProducts.includes(item._id) ? (
-              <FaHeart
-                style={{ fontSize: "1.3rem" }}
-                className="text-red-600"
-              />
+              <FaHeart style={{ fontSize: "1.3rem" }} className="text-red-600" />
             ) : (
-              <FaHeart
-                style={{ fontSize: "1.3rem" }}
-                className="text-gray-400"
-              />
+              <FaHeart style={{ fontSize: "1.3rem" }} className="text-gray-400" />
             )}
           </div>
           <img
             src={`http://localhost:8000/${item.images[0]}`}
             alt="Product"
-            className="h-full aspect-auto mix-blend-multiply  w-full  object-contain  object-center"
+            className="h-full aspect-auto mix-blend-multiply w-full object-contain object-center"
           />
         </div>
       ) : (
@@ -247,7 +249,6 @@ function ProductCard({ item, likedProducts, handleLike, handleProduct }) {
 }
 
 // Extracted Pagination component
-
 function Pagination({ productsPerPage, totalProducts, paginate, currentPage }) {
   const totalPages = Math.ceil(totalProducts / productsPerPage);
   const pageNumbers = [];

@@ -82,7 +82,6 @@ module.exports.myads = (req, res) => {
     });
 };
 module.exports.deleteprod = (req, res) => {
-  console.log(req.body);
   Sellingproduct.findOne({ _id: req.body.pid })
     .then((result) => {
       if (result.addedBy == req.body.userId) {
@@ -141,7 +140,7 @@ module.exports.editprod = async (req, res) => {
 };
 module.exports.sellprod = async (req, res) => {
   try {
-    const { title, description, price, category,prod_status } = req.body;
+    const { title, description, price, category, prod_status } = req.body;
     const addedBy = req.body.userId;
     const plat = req.body.plat;
     const plong = req.body.plong;
@@ -204,7 +203,7 @@ module.exports.recommend = async (req, res) => {
   res.json(recommendations);
 };
 
-module.exports.admin_delete =async (req, res) => {
+module.exports.admin_delete = async (req, res) => {
   try {
     const product = await Sellingproduct.findByIdAndDelete(req.params.id);
     if (!product) {
@@ -214,4 +213,4 @@ module.exports.admin_delete =async (req, res) => {
   } catch (error) {
     res.status(500).send({ message: "Error deleting product" });
   }
-}
+};

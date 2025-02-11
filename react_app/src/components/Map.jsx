@@ -41,7 +41,7 @@ const Map = ({ ploc }) => {
   return (
     <>
     
-    <div id="map" style={{ height: '400px', width: '100%',zIndex:'0' }}></div>
+    <div id="map" style={{ height: '350px', width: '100%',zIndex:'0' }}></div>
     </>
   );
 };

@@ -49,33 +49,46 @@ const Sell = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      const data = new FormData();
-      data.append("plat", position.coords.latitude);
-      data.append("plong", position.coords.longitude);
-      data.append("title", formData.title);
-      data.append("description", formData.description);
-      data.append("price", formData.price);
-      data.append("category", formData.category);
-      data.append("prod_status", formData.prod_status);
-      data.append("userId", localStorage.getItem("userId"));
-
-      formData.images.forEach((image) => {
-        data.append("images", image);
-      });
-
-      axios
-        .post("http://localhost:8000/sell", data)
-        .then((res) => {
-          console.log("Success:", res.data);
-        })
-        .catch((err) => {
-          console.error("Error:", err);
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+  
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const data = new FormData();
+        data.append("plat", position.coords.latitude);
+        data.append("plong", position.coords.longitude);
+        data.append("title", formData.title);
+        data.append("description", formData.description);
+        data.append("price", formData.price);
+        data.append("category", formData.category);
+        data.append("prod_status", formData.prod_status);
+        data.append("userId", localStorage.getItem("userId"));
+  
+        formData.images.forEach((image) => {
+          data.append("images", image);
         });
-    });
-    navigate("/");
+  
+        axios
+          .post("http://localhost:8000/sell", data)
+          .then((res) => {
+            console.log("Success:", res.data);
+            navigate("/"); // Navigate only after successful submission
+          })
+          .catch((err) => {
+            console.error("Error:", err);
+          });
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        // Optionally handle error (e.g., notify the user)
+      },
+      options
+    );
   };
+  
 
   return (
     <>

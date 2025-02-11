@@ -190,7 +190,7 @@ const Navbar = ({ search, handleSearch, handleClick, resetSearch }) => {
             ) : (
               <Link
                 to="/login"
-                className="bg-cyan-500 hover:bg-cyan-600 py-2 px-3 rounded-md"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-lg shadow hover:from-purple-600 hover:to-pink-600 transition-all"
               >
                 Login
               </Link>

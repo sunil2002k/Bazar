@@ -1,12 +1,7 @@
 import "./index.css";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  // Route,
-  // Link,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
@@ -19,11 +14,15 @@ import MyProfile from "./components/MyProfile";
 import Notfound from "./components/Notfound";
 import Editproduct from "./components/Editproduct";
 import Resetpassword from "./components/Resetpassword";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
-    path: "/sell",
-    element: <Sell />,
+    path: "/sell",element: (
+      <ProtectedRoute>
+        <Sell />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/product/:productId",
@@ -43,20 +42,27 @@ const router = createBrowserRouter([
   },
   {
     path: "/myprofile",
-    element: <MyProfile />,
+    element: (
+      <ProtectedRoute>
+        <MyProfile />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/signup",
     element: <SignUp />,
   },
-
   {
     path: "/editproduct/:productId",
     element: <Editproduct />,
   },
   {
     path: "/myproduct",
-    element: <Myproduct />,
+    element: (
+      <ProtectedRoute>
+        <Myproduct />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/notfound",

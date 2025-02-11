@@ -13,6 +13,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
+    "framer-motion": "^12.4.2",
     "leaflet": "^1.9.4",
     "locomotive-scroll": "^4.1.4",
     "lucide-react": "^0.446.0",

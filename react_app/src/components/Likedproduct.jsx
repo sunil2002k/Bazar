@@ -53,7 +53,6 @@ function Likedproduct() {
     } catch {
       alert("Server error occurred");
     }
-  
   };
 
   const handleSearch = (value) => setSearch(value);
@@ -71,31 +70,36 @@ function Likedproduct() {
     setcatProducts(filteredProducts);
   };
 
-  // const handleCategory = (value) => {
-  //   const filteredProducts = products.filter(
-  //     (item) => item.category.toLowerCase() === value.toLowerCase()
-  //   );
-  //   setcatProducts(filteredProducts);
-  // };
   const handleProduct = (_id) => {
     navigate(`/product/${_id}`);
   };
 
   return (
     <>
-      <Navbar search={search} handleSearch={handleSearch} handleClick={handleClick} resetSearch={resetSearch}/>
+      <Navbar
+        search={search}
+        handleSearch={handleSearch}
+        handleClick={handleClick}
+        resetSearch={resetSearch}
+      />
       {/* <Productcat handleCategory={handleCategory} /> */}
 
       <div className="homepage animate-fade">
         {products.length > 0 ? (
           <div className="products-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
             {products.map((item) => (
-              <div key={item._id} className="product-item rounded-lg flex flex-col p-4 shadow-md hover:shadow-lg cursor-pointer" onClick={() => handleProduct(item._id)}>
+              <div
+                key={item._id}
+                className="product-item rounded-lg flex flex-col p-4 shadow-md hover:shadow-lg cursor-pointer"
+                onClick={() => handleProduct(item._id)}
+              >
                 {item.images && item.images.length > 0 ? (
                   <div className="product-image relative w-full h-48 overflow-hidden rounded-lg">
                     <FaHeart
                       className={`z-40 absolute top-2 right-2 text-xl cursor-pointer ${
-                        Likedproducts.includes(item._id) ? "text-red-600" : "text-gray-400"
+                        Likedproducts.includes(item._id)
+                          ? "text-red-600"
+                          : "text-gray-400"
                       }`}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -114,7 +118,9 @@ function Likedproduct() {
                 <div className="mt-4 flex flex-col items-start">
                   <p className="text-lg font-semibold">{item.title}</p>
                   <p className="text-sm">{item.category}</p>
-                  <h3 className="mt-4 text-xl font-bold text-green-600">Rs. {item.price}</h3>
+                  <h3 className="mt-4 text-xl font-bold text-green-600">
+                    Rs. {item.price}
+                  </h3>
                 </div>
               </div>
             ))}

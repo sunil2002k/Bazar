@@ -46,6 +46,22 @@ const ProductDetail = () => {
       })
       .catch(() => alert("Server error occurred"));
   }, [productId]);
+  useEffect(() => {
+    const fetchLikedProducts = async () => {
+      try {
+        const url = "http://localhost:8000/liked_product";
+        const data = { userId: localStorage.getItem("userId") };
+        const res = await axios.post(url, data);
+        if (res.data.products) {
+          setLikedProducts(res.data.products.map((product) => product._id));
+        }
+      } catch (error) {
+        console.error("Error fetching liked products:", error);
+      }
+    };
+
+    fetchLikedProducts();
+  }, []);
 
   useEffect(() => {
     socket = io("http://localhost:8000");
@@ -203,7 +219,7 @@ const ProductDetail = () => {
                 <p className="text-green-600 text-2xl font-semibold">
                   रु. {Number(product.price).toLocaleString("en-IN")}
                 </p>
-                
+
                 <div className="flex gap-4 mt-2">
                   <button
                     onClick={() => handleContact(product.addedBy)}
@@ -213,7 +229,7 @@ const ProductDetail = () => {
                   </button>
                   <button
                     variant="outline"
-                    className="flex hover:bg-slate-100 items-center gap-2 border-zinc-400 border-1 outline-none p-2 rounded-lg"
+                    className="flex hover:bg-slate-100 items-center gap-2 border border-zinc-400 border-1 outline-none p-2 rounded-lg"
                     onClick={(e) => handleLike(product._id, e)}
                   >
                     <FaHeart
@@ -223,21 +239,20 @@ const ProductDetail = () => {
                           : "text-gray-400"
                       }`}
                     />
+
                     <span>
                       {likedProducts.includes(product._id)
-                        ? "Remove from favorites"
+                        ? "Add to favorites"
                         : "Add to favorites"}
                     </span>
                   </button>
                 </div>
-
-               
               </div>
 
               {/* Google Map */}
               <div className="mt-8">
                 <h2 className="text-xl font-bold mb-4">Product Location</h2>
-                <div className="relative w-full h-96 bg-gray-200 rounded-lg shadow-lg border border-gray-300">
+                <div className="relative w-100 h-auto bg-gray-200 rounded-lg shadow-lg ml-4 border border-gray-300">
                   <Map ploc={product.ploc} />
                 </div>
               </div>
@@ -258,7 +273,10 @@ const ProductDetail = () => {
         {/* Chatbox */}
         <div className="mt-8 bg-gray-100 p-6 rounded-lg ">
           <h2 className="text-xl font-bold">Questions about this product</h2>
-          <div ref={messagesContainerRef} className="overflow-y-auto h-40 border p-4 mt-4">
+          <div
+            ref={messagesContainerRef}
+            className="overflow-y-auto h-40 border p-4 mt-4"
+          >
             {messages.length > 0 ? (
               messages.map((msg, idx) => (
                 <div key={idx} className="mb-2 animate-slideIn">
