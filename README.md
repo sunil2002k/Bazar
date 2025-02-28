@@ -4,6 +4,7 @@ A feature-rich e-commerce platform using the MERN stack. Key features include us
 Utilized Lea?et.js for interactive location maps without API keys. Designed with a focus on scalability, user experience, and modern web development practices.
 
 Algorithm Details
+
 Nearby Search Algorithm Using Geolocation
 To implement a feature that allows users to discover products or services listed within a specified radius from their current location using geolocation data.
 Steps Involved:
